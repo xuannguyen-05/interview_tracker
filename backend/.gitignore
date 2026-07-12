@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+
+# env
+.env
+
+# build
+dist/
+build/
+
+# logs
+*.log
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+/src/generated/prisma

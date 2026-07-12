@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+}
+
+enum ApplicationStatus {
+  APPLIED
+  INTERVIEW
+  OFFER
+  REJECTED
+}
+
+enum NotificationType {
+  INTERVIEW
+  OFFER
+  REJECTED
+  FOLLOW_UP_7
+  FOLLOW_UP_10
+}
+
+model User {
+  user_id       Int    @id @default(autoincrement())
+  full_name     String @db.VarChar(100)
+  email         String @unique @db.VarChar(100)
+  password_hash String @db.VarChar(255)
+  role          Role   @default(USER)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  applications  Application[]
+  notifications Notification[]
+}
+
+model Application {
+  application_id         Int               @id @default(autoincrement())
+  user_id                Int
+  company_name           String            @db.VarChar(150)
+  position               String            @db.VarChar(150)
+  status                 ApplicationStatus @default(APPLIED)
+  apply_date             DateTime
+  job_url                String?           @db.Text
+  notes                  String?           @db.Text
+  last_status_changed_at DateTime          @default(now())
+
+  is_deleted Boolean   @default(false)
+  deleted_at DateTime?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  notifications    Notification[]
+  status_histories StatusHistory[]
+}
+
+model Notification {
+  notification_id Int              @id @default(autoincrement())
+  user_id         Int
+  application_id  Int
+  type            NotificationType
+  title           String           @db.VarChar(255)
+  message         String           @db.Text
+  is_read         Boolean          @default(false)
+
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  application Application @relation(fields: [application_id], references: [application_id], onDelete: Cascade)
+}
+
+model StatusHistory {
+  history_id     Int               @id @default(autoincrement())
+  application_id Int
+  old_status     ApplicationStatus
+  new_status     ApplicationStatus
+  changed_at     DateTime          @default(now())
+
+  application Application @relation(fields: [application_id], references: [application_id], onDelete: Cascade)
+}

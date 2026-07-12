@@ -1,0 +1,189 @@
+/* eslint-disable no-unused-vars */
+import React from "react"
+
+function formatDate(input) {
+  if (!input) return ""
+  const d = new Date(input)
+  return d.toLocaleDateString()
+}
+
+const STATUS_STYLES = {
+  APPLIED: "border-amber-200",
+  INTERVIEW: "border-violet-100",
+  OFFER: "border-emerald-100",
+  REJECTED: "border-rose-100",
+}
+
+const AVATAR_BG = {
+  APPLIED: "bg-amber-100 text-amber-700",
+  INTERVIEW: "bg-violet-100 text-violet-700",
+  OFFER: "bg-emerald-100 text-emerald-700",
+  REJECTED: "bg-rose-100 text-rose-700",
+}
+
+function LegacyApplicationCard({ application, onEdit, onDelete, draggableProps = {} }) {
+  const status = application.status ?? "APPLIED"
+  const borderClass = STATUS_STYLES[status] || "border-slate-200"
+  const avatarClass = AVATAR_BG[status] || "bg-indigo-100 text-indigo-700"
+
+  return (
+    <div
+      {...draggableProps}
+      className={`rounded-3xl border p-4 bg-white shadow-sm ${borderClass}`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="flex items-center gap-3">
+            <div className={`h-10 w-10 flex-shrink-0 rounded-full ${avatarClass} grid place-items-center font-bold`}> 
+              {application.company_name?.[0]?.toUpperCase() ?? "?"}
+            </div>
+            <div>
+              <p className="font-semibold text-slate-900">{application.company_name}</p>
+              <p className="text-sm text-slate-500">{application.position}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-right flex items-start gap-2">
+          <div className="text-xs text-slate-400 mr-2">{formatDate(application.apply_date)}</div>
+
+          <div className="flex gap-2">
+            <button onClick={() => onEdit?.(application)} className="text-slate-400 hover:text-slate-600">✎</button>
+            <button onClick={() => onDelete?.(application.application_id)} className="text-rose-500 hover:text-rose-700">🗑</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function CardIcon({ name, className = "h-4 w-4" }) {
+  const paths = {
+    calendar: "M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z",
+    edit: "M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z",
+    trash: "M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15",
+    warning: "M12 9v4M12 17h.01M10.3 3.9 1.1 1.9a2 2 0 0 0-1.1 0L1.7 20a2 2 0 0 0 1.7 3h17.2a2 2 0 0 0 1.7-3L13.7 5.8a2 2 0 0 0-3.4 0Z",
+    external: "M14 3h7v7M10 14 21 3M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5",
+  }
+
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d={paths[name]}
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function formatDisplayDate(input) {
+  if (!input) return ""
+  return new Date(input).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+}
+
+function daysSince(input) {
+  if (!input) return 0
+  const start = new Date(input)
+  const today = new Date()
+  start.setHours(0, 0, 0, 0)
+  today.setHours(0, 0, 0, 0)
+  return Math.max(0, Math.floor((today - start) / 86400000))
+}
+
+const INITIAL_COLORS = [
+  "bg-blue-100 text-blue-700",
+  "bg-violet-100 text-violet-700",
+  "bg-emerald-100 text-emerald-700",
+  "bg-amber-100 text-amber-700",
+  "bg-rose-100 text-rose-700",
+  "bg-indigo-100 text-indigo-700",
+  "bg-cyan-100 text-cyan-700",
+  "bg-pink-100 text-pink-700",
+]
+
+export default function ApplicationCard({ application, onEdit, onDelete, draggableProps = {} }) {
+  const status = application.status ?? "APPLIED"
+  const daysAgo = daysSince(application.apply_date)
+  const needsFollowUp = status === "APPLIED" && daysAgo >= 7
+  const isLate = status === "APPLIED" && daysAgo >= 10
+  const initial = application.company_name?.[0]?.toUpperCase() ?? "?"
+  const colorIndex = initial.charCodeAt(0) % INITIAL_COLORS.length
+  const borderClass = isLate
+    ? "border-red-300 bg-red-50/30"
+    : needsFollowUp
+      ? "border-amber-300 bg-amber-50/30"
+      : "border-black/[0.08] bg-white"
+
+  return (
+    <div
+      {...draggableProps}
+      className={`group cursor-grab select-none rounded-xl border p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:cursor-grabbing ${borderClass}`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex items-start gap-3">
+          <div className={`grid h-8 w-8 shrink-0 place-items-center rounded-xl text-xs font-semibold ${INITIAL_COLORS[colorIndex]}`}>
+            {initial}
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-bold text-slate-950">{application.company_name}</p>
+            <p className="truncate text-sm text-slate-500">{application.position}</p>
+          </div>
+        </div>
+
+        <div className="flex shrink-0 items-center gap-1 opacity-0 transition group-hover:opacity-100">
+          {isLate ? <CardIcon name="warning" className="mr-1 h-4 w-4 text-red-400" /> : null}
+          <button
+            type="button"
+            onClick={() => onEdit?.(application)}
+            className="grid h-7 w-7 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            aria-label="Edit application"
+          >
+            <CardIcon name="edit" className="h-3.5 w-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => onDelete?.(application.application_id)}
+            className="grid h-7 w-7 place-items-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-500"
+            aria-label="Delete application"
+          >
+            <CardIcon name="trash" className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      </div>
+
+      {application.notes ? (
+        <p className="mt-2 line-clamp-2 pl-11 text-xs leading-5 text-slate-400">{application.notes}</p>
+      ) : null}
+
+      <div className="mt-2 flex items-center justify-between pl-11">
+        <div className="flex items-center gap-1.5 text-xs text-slate-400">
+          <CardIcon name="calendar" className="h-3.5 w-3.5" />
+          <span>{formatDisplayDate(application.apply_date)}</span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {application.job_url ? (
+            <a
+              href={application.job_url}
+              target="_blank"
+              rel="noreferrer"
+              className="text-slate-300 transition hover:text-indigo-500"
+              aria-label="Open job URL"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <CardIcon name="external" className="h-3.5 w-3.5" />
+            </a>
+          ) : null}
+          {needsFollowUp ? (
+            <span className={`rounded-lg px-2 py-1 text-xs font-semibold ${isLate ? "bg-red-50 text-red-500" : "bg-amber-50 text-amber-600"}`}>
+              {daysAgo}d
+            </span>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  )
+}
