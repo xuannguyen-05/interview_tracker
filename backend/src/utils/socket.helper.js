@@ -1,4 +1,4 @@
-import { getIO, getOnlineUsers } from "../config/socket"
+import { getIO, getOnlineUsers } from "../config/socket.js"
 
 const emitNotification = (user_id, data) => {
     const io = getIO()

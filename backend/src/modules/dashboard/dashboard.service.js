@@ -209,8 +209,8 @@ const dashboardService = async(user_id) => {
     ])
     
     return {
-        summary,
-        funnel,
+        summary: getSummary,
+        funnel: getFunnel,
         urgentApplications: urgent,
         recentApplications: recent
     }

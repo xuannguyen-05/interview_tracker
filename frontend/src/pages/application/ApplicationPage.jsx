@@ -4,6 +4,7 @@ import { getApplications, createApplication } from "@/services/applicationServic
 import Column from "@/components/application/Column"
 import ApplicationCard from "@/components/application/ApplicationCard"
 import AddApplicationModal from "@/components/application/AddApplicationModal"
+import ApplicationListView from "@/components/application/ApplicationListView"
 import { updateApplicationStatus, deleteApplication, updateApplication } from "@/services/applicationService"
 import { getErrorMessage } from "@/utils/getErrorMessage"
 
@@ -147,17 +148,26 @@ function LegacyApplicationPage() {
 }
 
 const BOARD_STATUSES = [
-  { key: "APPLIED", label: "Applied", color: "#3B82F6", bg: "#EFF6FF" },
-  { key: "INTERVIEW", label: "Interview", color: "#8B5CF6", bg: "#F5F3FF" },
-  { key: "OFFER", label: "Offer", color: "#10B981", bg: "#ECFDF5" },
-  { key: "REJECTED", label: "Rejected", color: "#EF4444", bg: "#FEF2F2" },
+  { key: "APPLIED", label: "Applied", color: "#3B82F6", bg: "#EFF6FF", columnBg: "#F5F8FF" },
+  { key: "INTERVIEW", label: "Interview", color: "#8B5CF6", bg: "#F5F3FF", columnBg: "#FAF8FF" },
+  { key: "OFFER", label: "Offer", color: "#10B981", bg: "#ECFDF5", columnBg: "#F4FCF8" },
+  { key: "REJECTED", label: "Rejected", color: "#EF4444", bg: "#FEF2F2", columnBg: "#FFF7F7" },
+]
+
+const MONTH_OPTIONS = [
+  { value: "ALL", label: "All months" },
+  ...Array.from({ length: 12 }, (_, index) => ({
+    value: String(index + 1),
+    label: new Date(2000, index, 1).toLocaleString("en-US", { month: "long" }),
+  })),
 ]
 
 function PageIcon({ name, className = "h-4 w-4" }) {
   const paths = {
     search: "M21 21l-4.3-4.3M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z",
-    filter: "M3 5h18M7 12h10M10 19h4",
-    plus: "M12 5v14M5 12h14",
+    chevron: "M6 9l6 6 6-6",
+    board: "M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z",
+    list: "M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01",
   }
 
   return (
@@ -173,6 +183,55 @@ function PageIcon({ name, className = "h-4 w-4" }) {
   )
 }
 
+function FilterSelect({ value, onChange, options, className = "" }) {
+  return (
+    <div className={`relative ${className}`}>
+      <select
+        value={value}
+        onChange={onChange}
+        className="h-10 w-full min-w-[148px] appearance-none rounded-xl border border-black/[0.08] bg-white pl-4 pr-9 text-sm text-slate-700 outline-none transition focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100"
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      <PageIcon
+        name="chevron"
+        className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+      />
+    </div>
+  )
+}
+
+function ViewToggle({ viewMode, onChange }) {
+  return (
+    <div className="flex rounded-xl border border-black/[0.08] bg-white p-1">
+      <button
+        type="button"
+        onClick={() => onChange("board")}
+        aria-label="Board view"
+        className={`grid h-8 w-8 place-items-center rounded-lg transition ${
+          viewMode === "board" ? "bg-indigo-50 text-indigo-600" : "text-slate-400 hover:text-slate-600"
+        }`}
+      >
+        <PageIcon name="board" className="h-4 w-4" />
+      </button>
+      <button
+        type="button"
+        onClick={() => onChange("list")}
+        aria-label="List view"
+        className={`grid h-8 w-8 place-items-center rounded-lg transition ${
+          viewMode === "list" ? "bg-indigo-50 text-indigo-600" : "text-slate-400 hover:text-slate-600"
+        }`}
+      >
+        <PageIcon name="list" className="h-4 w-4" />
+      </button>
+    </div>
+  )
+}
+
 export default function ApplicationPage() {
   const [applications, setApplications] = useState([])
   const [loading, setLoading] = useState(false)
@@ -184,7 +243,8 @@ export default function ApplicationPage() {
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState("ALL")
   const [monthFilter, setMonthFilter] = useState("ALL")
-  const [yearFilter, setYearFilter] = useState(String(new Date().getFullYear()))
+  const [yearFilter, setYearFilter] = useState("ALL")
+  const [viewMode, setViewMode] = useState("board")
 
   function buildQueryParams() {
     const params = {}
@@ -284,71 +344,68 @@ export default function ApplicationPage() {
     setDraggingId(applicationId)
   }
 
+  function handleDragEnd() {
+    setDraggingId(null)
+    setOverColumn(null)
+  }
+
+  const statusOptions = [
+    { value: "ALL", label: "All positions" },
+    ...BOARD_STATUSES.map((status) => ({ value: status.key, label: status.label })),
+  ]
+
+  const yearOptions = [
+    { value: "ALL", label: "All years" },
+    ...Array.from({ length: 6 }, (_, index) => {
+      const year = new Date().getFullYear() - index
+      return { value: String(year), label: String(year) }
+    }),
+  ]
+
+  const timeLabel =
+    monthFilter === "ALL" && yearFilter === "ALL"
+      ? "All time"
+      : monthFilter === "ALL"
+        ? yearFilter
+        : yearFilter === "ALL"
+          ? MONTH_OPTIONS.find((month) => month.value === monthFilter)?.label
+          : `${MONTH_OPTIONS.find((month) => month.value === monthFilter)?.label} ${yearFilter}`
+
   return (
     <section className="flex h-full min-h-0 flex-col overflow-hidden bg-[#f5f6f8]">
-      <header className="flex min-h-[68px] items-center justify-between gap-3 border-b border-black/[0.06] bg-white px-6">
-        <div className="flex min-w-0 flex-1 items-center gap-3">
-          <div className="relative w-full max-w-[260px]">
-            <PageIcon name="search" className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-            <input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search company or position..."
-              className="h-11 w-full rounded-2xl border border-black/[0.08] bg-slate-50 pl-11 pr-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
-            />
-          </div>
+      <header className="flex min-h-[64px] flex-wrap items-center gap-3 border-b border-black/[0.06] bg-white px-5 py-3">
+        <div className="relative min-w-[220px] flex-1 max-w-[360px]">
+          <PageIcon name="search" className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search companies, positions..."
+            className="h-10 w-full rounded-xl border border-black/[0.08] bg-slate-50 pl-11 pr-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+          />
+        </div>
 
-          <div className="hidden items-center gap-2 xl:flex">
-            <PageIcon name="filter" className="h-4 w-4 text-slate-400" />
-            <span className="text-sm text-slate-500">Filter:</span>
-            {["ALL", ...BOARD_STATUSES.map((status) => status.key)].map((key) => {
-              const label = key === "ALL" ? "All" : BOARD_STATUSES.find((status) => status.key === key)?.label
+        <FilterSelect
+          value={statusFilter}
+          onChange={(event) => setStatusFilter(event.target.value)}
+          options={statusOptions}
+        />
 
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setStatusFilter(key)}
-                  className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
-                    statusFilter === key
-                      ? "bg-indigo-600 text-white shadow-sm shadow-indigo-200"
-                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                  }`}
-                >
-                  {label}
-                </button>
-              )
-            })}
+        <FilterSelect
+          value={monthFilter}
+          onChange={(event) => setMonthFilter(event.target.value)}
+          options={MONTH_OPTIONS}
+        />
 
-            <select
-              value={monthFilter}
-              onChange={(event) => setMonthFilter(event.target.value)}
-              className="h-9 rounded-xl border border-black/[0.08] bg-white px-3 text-sm text-slate-700 outline-none focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100"
-            >
-              <option value="ALL">All months</option>
-              {Array.from({ length: 12 }, (_, index) => (
-                <option key={index + 1} value={String(index + 1)}>
-                  Month {index + 1}
-                </option>
-              ))}
-            </select>
+        <FilterSelect
+          value={yearFilter}
+          onChange={(event) => setYearFilter(event.target.value)}
+          options={yearOptions}
+        />
 
-            <select
-              value={yearFilter}
-              onChange={(event) => setYearFilter(event.target.value)}
-              className="h-9 rounded-xl border border-black/[0.08] bg-white px-3 text-sm text-slate-700 outline-none focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100"
-            >
-              {Array.from({ length: 6 }, (_, index) => {
-                const year = new Date().getFullYear() - index
-                return (
-                  <option key={year} value={String(year)}>
-                    {year}
-                  </option>
-                )
-              })}
-              <option value="ALL">All years</option>
-            </select>
-          </div>
+        <span className="hidden text-xs text-slate-400 lg:inline">{timeLabel}</span>
+
+        <div className="ml-auto">
+          <ViewToggle viewMode={viewMode} onChange={setViewMode} />
         </div>
       </header>
 
@@ -361,8 +418,17 @@ export default function ApplicationPage() {
 
         {loading ? (
           <div className="grid h-full place-items-center text-sm text-slate-400">Loading applications...</div>
+        ) : viewMode === "list" ? (
+          <ApplicationListView
+            applications={applications}
+            onEdit={(selected) => {
+              setEditing(selected)
+              setShowModal(true)
+            }}
+            onDelete={handleDelete}
+          />
         ) : (
-          <div className="grid h-full grid-cols-4 gap-3">
+          <div className="flex h-full min-h-0 gap-3">
             {BOARD_STATUSES.map((status) => (
               <Column
                 key={status.key}
@@ -371,21 +437,20 @@ export default function ApplicationPage() {
                 statusKey={status.key}
                 color={status.color}
                 bg={status.bg}
+                columnBg={status.columnBg}
                 onDropStatus={handleDropStatus}
                 isOver={overColumn === status.key}
+                isDragging={Boolean(draggingId)}
+                onDragEnterColumn={setOverColumn}
+                onDragLeaveColumn={() => setOverColumn(null)}
               >
                 {(grouped[status.key] ?? []).map((app) => (
                   <div
                     key={app.application_id}
                     draggable
                     onDragStart={(event) => handleDragStart(event, app.application_id)}
-                    onDragEnd={() => {
-                      setDraggingId(null)
-                      setOverColumn(null)
-                    }}
-                    onDragEnter={() => setOverColumn(status.key)}
-                    onDragLeave={() => setOverColumn(null)}
-                    className={draggingId === app.application_id ? "opacity-60" : ""}
+                    onDragEnd={handleDragEnd}
+                    className={draggingId === app.application_id ? "opacity-50" : ""}
                   >
                     <ApplicationCard
                       application={app}

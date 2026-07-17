@@ -1,3 +1,4 @@
+import { ApplicationStatus } from '@prisma/client'
 import prisma from '../../config/prisma.js'
 import AppError from '../../utils/AppError.js'
 import notify from '../notification/notification.helper.js'
@@ -149,7 +150,7 @@ const updateStatusApplicationService = async(application_id, user_id, data) => {
         return existApplication
     }
 
-    return await prisma.$transaction(async (tx) => {
+    const updated = await prisma.$transaction(async (tx) => {
 
         const updated = await tx.application.update({
             where: {
@@ -168,18 +169,26 @@ const updateStatusApplicationService = async(application_id, user_id, data) => {
                 new_status: data.status
             }
         })
-
-        await notify({
-            application_id,
-            user_id,
-            type: existApplication.status,
-            data: {
-                company_name: existApplication.company_name
-            }
-        })
-
+        
         return updated
     })
+
+    switch (data.status) {
+        case ApplicationStatus.INTERVIEW:
+        case ApplicationStatus.OFFER:
+        case ApplicationStatus.REJECTED:
+            await notify({
+                application_id,
+                user_id,
+                type: data.status,
+                data: {
+                    company_name: existApplication.company_name
+                }
+            });
+            break;
+    }
+
+    return updated
 }
 
 

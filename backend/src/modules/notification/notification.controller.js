@@ -2,7 +2,7 @@ import {getNotificationsService,
     getNotificationUnreadCountService,
     updateNotificationReadService,
     updateNotificationReadAllService
-} from './notification.service'
+} from './notification.service.js'
 import asyncHandler from '../../utils/asyncHandler.js'
 
 const getNotifications = asyncHandler(async(req, res) => {
@@ -25,7 +25,7 @@ const getNotificationUnreadCount = asyncHandler(async(req, res) => {
 
     res.status(200).json({
         message: "Get notification unread count success",
-        data: notifications
+        data: { count }
     })
 })
 

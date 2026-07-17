@@ -16,7 +16,7 @@ const router = express.Router();
 router.use(authMiddleware);
 
 router.post("/", validate(createApplicationSchema), createApplication)
-router.get("/", validate(filterApplicationSchema), getApplications)
+router.get("/", validate(filterApplicationSchema, 'query'), getApplications)
 router.get("/:id", getApplicationById)
 router.patch("/:id", validate(updateApplicationSchema), updateApplication)
 router.patch("/:id/status", validate(updateStatusSchema), updateStatusApplication)

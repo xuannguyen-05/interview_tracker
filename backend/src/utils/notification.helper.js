@@ -1,7 +1,7 @@
 import { NotificationType } from "@prisma/client";
 
 export default function generateNotificationContent(type, data = {}) {
-  const { company_name_name } = data;
+  const { company_name } = data;
 
   switch (type) {
     case NotificationType.INTERVIEW:
