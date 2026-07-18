@@ -44,12 +44,14 @@ const getApplicationsService = async(user_id, query) => {
         where.OR = [
             {
                 company_name: {
-                    contains: search
+                    contains: search,
+                    mode: "insensitive"
                 }
             },
             {
                 position: {
-                    contains: search
+                    contains: search,
+                    mode: "insensitive"
                 }
             }
         ]

@@ -218,14 +218,14 @@ const dashboardService = async(user_id) => {
 
 const getMonthlyService = async(user_id, year) => {
     const result = await prisma.$queryRaw`
-        SELECT 
-            MONTH(apply_date) AS month,
-            COUNT(*) As count
-        FROM Application
+        SELECT
+            EXTRACT(MONTH FROM apply_date) AS month,
+            COUNT(*) AS count
+        FROM "Application"
         WHERE user_id = ${user_id}
-            AND YEAR(apply_date) = ${year}
-            AND is_deleted = false
-        GROUP BY MONTH(apply_date)
+          AND EXTRACT(YEAR FROM apply_date) = ${year}
+          AND is_deleted = false
+        GROUP BY EXTRACT(MONTH FROM apply_date)
         ORDER BY month
     `
 
