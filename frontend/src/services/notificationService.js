@@ -1,4 +1,5 @@
 import http from "./http"
+import { toastService } from "./toastService"
 
 export async function getNotifications() {
   const response = await http.get("/notification")
@@ -11,11 +12,23 @@ export async function getUnreadCount() {
 }
 
 export async function markNotificationRead(notificationId) {
-  const response = await http.patch(`/notification/${notificationId}/read`)
-  return response.data
+  try {
+    const response = await http.patch(`/notification/${notificationId}/read`)
+    toastService.showByModule("notification", "markAsRead", "success")
+    return response.data
+  } catch (error) {
+    toastService.showByModule("notification", "markAsRead", "error")
+    throw error
+  }
 }
 
 export async function markAllNotificationsRead() {
-  const response = await http.patch("/notification/read-all")
-  return response.data
+  try {
+    const response = await http.patch("/notification/read-all")
+    toastService.showByModule("notification", "markAllAsRead", "success")
+    return response.data
+  } catch (error) {
+    toastService.showByModule("notification", "markAllAsRead", "error")
+    throw error
+  }
 }

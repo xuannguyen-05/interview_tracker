@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 import { getUnreadCount } from "@/services/notificationService";
+import { toastService } from "@/services/toastService";
 import NotificationPanel from "@/components/notification/NotificationPanel";
 
 import { socket } from "@/socket/socket";
@@ -83,6 +84,7 @@ export default function Sidebar() {
   socket.disconnect();
 
   clearAccessToken();
+  toastService.showByModule("auth", "logout", "success");
   navigate("/login", { replace: true });
 }
 
