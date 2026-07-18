@@ -19,7 +19,8 @@ initSocket(server)
 
 app.use(cors({
   origin: [
-    'http://localhost:5173'
+    'http://localhost:5173',
+    'https://interview-tracker-khaki.vercel.app'
   ],
   credentials: true
 }));
