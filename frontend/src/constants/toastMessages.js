@@ -7,15 +7,19 @@ export const TOAST_MESSAGES = {
         message: "Login successful!",
         type: "success",
       },
-      logout: {
+    },
+
+    logout: {
+      success: {
         message: "Logged out successfully",
         type: "success",
       },
-      register: {
-        success: {
-          message: "Account created successfully!",
-          type: "success",
-        },
+    },
+
+    register: {
+      success: {
+        message: "Account created successfully!",
+        type: "success",
       },
     },
   },
@@ -83,13 +87,13 @@ export const TOAST_MESSAGES = {
       type: "loading",
     },
   },
-}
+};
 
 // Helper function to get toast message
 export function getToastMessage(module, action, result = "success") {
   try {
-    return TOAST_MESSAGES[module][action][result]
+    return TOAST_MESSAGES[module][action][result];
   } catch (error) {
-    return TOAST_MESSAGES.general.error
+    return TOAST_MESSAGES.general.error;
   }
 }
