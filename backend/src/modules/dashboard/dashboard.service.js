@@ -223,7 +223,7 @@ const getMonthlyService = async(user_id, year) => {
             COUNT(*) AS count
         FROM "Application"
         WHERE user_id = ${user_id}
-          AND EXTRACT(YEAR FROM apply_date) = ${year}
+          AND EXTRACT(YEAR FROM apply_date)::int = ${year}
           AND is_deleted = false
         GROUP BY EXTRACT(MONTH FROM apply_date)
         ORDER BY month

@@ -15,7 +15,9 @@ const dashboard = asyncHandler(async(req, res) => {
 const getMonthly = asyncHandler(async(req, res) => {
     const user_id = req.user.user_id
 
-    const year = req.query.year ?? new Date().getFullYear()
+    const year = req.query.year
+    ? Number(req.query.year)
+    : new Date().getFullYear()
 
     const monthly = await getMonthlyService(user_id, year)
 
