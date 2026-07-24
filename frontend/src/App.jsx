@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes, useLocation } from "react-router-dom"
 import { useAuthStore } from "@/stores/useAuthStore"
 
 import LoginPage from "@/pages/auth/LoginPage"
@@ -7,6 +7,9 @@ import NotFoundPage from "@/pages/errors/NotFoundPage"
 import DashboardPage from "@/pages/dashboard/DashboardPage"
 import ApplicationPage from "@/pages/application/ApplicationPage"
 import MainLayout from "@/components/layout/MainLayout"
+
+import ReactGA from "./lib/analytics";
+import { useEffect } from "react";
 
 function ProtectedRoute({ children }) {
   const { accessToken } = useAuthStore()
@@ -32,6 +35,17 @@ function PublicOnlyRoute({ children }) {
 
 export default function App() {
   const { accessToken } = useAuthStore()
+
+  const location = useLocation();
+
+    useEffect(() => {
+
+        ReactGA.send({
+            hitType: "pageview",
+            page: location.pathname + location.search,
+        });
+
+    }, [location]);
 
   return (
     <Routes>
