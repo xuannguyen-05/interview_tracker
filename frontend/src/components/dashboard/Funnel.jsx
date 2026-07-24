@@ -10,10 +10,14 @@ export default function Funnel({ funnel }) {
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload
+      const item = funnel?.find(f => f.label === data.name)
       return (
-        <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-lg">
-          <p className="text-sm font-medium text-slate-900">{data.name}</p>
+        <div className="rounded-lg border border-slate-200 bg-white px-4 py-3 shadow-lg">
+          <p className="text-sm font-semibold text-slate-900">{data.name}</p>
           <p className="text-sm text-slate-600">{data.value} applications</p>
+          {item && item.percent !== undefined && (
+            <p className="text-xs text-slate-400 mt-1">{item.percent.toFixed(1)}% conversion</p>
+          )}
         </div>
       )
     }
@@ -24,8 +28,8 @@ export default function Funnel({ funnel }) {
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex items-center justify-between">
         <div>
-          <h4 className="text-lg font-semibold">Conversion Funnel</h4>
-          <p className="text-sm text-slate-400">Applied → Offer pipeline</p>
+          <h4 className="text-lg font-semibold">Application Pipeline</h4>
+          <p className="text-sm text-slate-400">Track your job application progress</p>
         </div>
         <div className="flex gap-4 text-sm">
           {chartData.map((item) => (
@@ -45,14 +49,15 @@ export default function Funnel({ funnel }) {
               dataKey="value"
               data={chartData}
               isAnimationActive
+              animationDuration={800}
               label={(entry) => `${entry.value}`}
-              labelLine={{ stroke: '#fff', strokeWidth: 2 }}
+              labelLine={{ stroke: '#fff', strokeWidth: 2, strokeDasharray: '3 3' }}
             >
               <LabelList
                 dataKey="name"
                 position="center"
                 fill="#fff"
-                style={{ fontSize: 13, fontWeight: 600 }}
+                style={{ fontSize: 14, fontWeight: 600, textShadow: '0 1px 2px rgba(0,0,0,0.1)' }}
               />
             </RechartsFunnel>
           </FunnelChart>
