@@ -1,5 +1,12 @@
 const errorHandler = (err, req, res, next) => {
     console.error(err);
+
+    console.error({
+        code: err.code,
+        message: err.message,
+        meta: err.meta,
+    });
+    
     const statusCode = err.statusCode || 500
     const fallbackCode = statusCode === 400
         ? "BAD_REQUEST"
