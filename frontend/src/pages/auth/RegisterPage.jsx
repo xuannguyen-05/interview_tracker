@@ -62,6 +62,11 @@
 
         navigate("/login", { replace: true });
         } catch (requestError) {
+             console.log("ERROR:", requestError);
+  console.log("MESSAGE:", requestError?.message);
+  console.log("RESPONSE:", requestError?.response?.data);
+  console.log("STATUS:", requestError?.response?.status);
+
         setError(
             getErrorMessage(
             requestError,
