@@ -3,6 +3,8 @@ import { useAuthStore } from "@/stores/useAuthStore"
 
 import LoginPage from "@/pages/auth/LoginPage"
 import RegisterPage from "@/pages/auth/RegisterPage"
+import ForgotPasswordPage from "@/pages/auth/ForgotPasswordPage"
+import ResetPasswordPage from "@/pages/auth/ResetPasswordPage"
 import NotFoundPage from "@/pages/errors/NotFoundPage"
 import DashboardPage from "@/pages/dashboard/DashboardPage"
 import ApplicationPage from "@/pages/application/ApplicationPage"
@@ -68,6 +70,22 @@ export default function App() {
         element={
           <PublicOnlyRoute>
             <RegisterPage />
+          </PublicOnlyRoute>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <PublicOnlyRoute>
+            <ForgotPasswordPage />
+          </PublicOnlyRoute>
+        }
+      />
+      <Route
+        path="/reset-password"
+        element={
+          <PublicOnlyRoute>
+            <ResetPasswordPage />
           </PublicOnlyRoute>
         }
       />

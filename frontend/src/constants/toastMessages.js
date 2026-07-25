@@ -22,6 +22,20 @@ export const TOAST_MESSAGES = {
         type: "success",
       },
     },
+
+    forgotPassword: {
+      success: {
+        message: "Password reset link sent to your email",
+        type: "success",
+      },
+    },
+
+    resetPassword: {
+      success: {
+        message: "Password reset successfully! Please login with your new password",
+        type: "success",
+      },
+    },
   },
 
   // Application Module
