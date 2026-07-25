@@ -1,4 +1,4 @@
-import {registerService, loginService} from './auth.service.js'
+import {registerService, loginService, forgotPasswordService, resetPasswordService} from './auth.service.js'
 import asyncHandler from '../../utils/asyncHandler.js'
 
 
@@ -50,6 +50,27 @@ const logout = (req, res) => {
 
 }
 
-export {register, login, logout}
+const forgotPassword = asyncHandler(async (req, res) => {
+    await forgotPasswordService(req.body.email);
+
+    res.status(200).json({
+        success: true,
+        message:
+        "If an account with that email exists, a password reset link has been sent.",
+    });
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+  const { token, password } = req.body;
+
+  await resetPasswordService(token, password);
+
+  res.status(200).json({
+    success: true,
+    message: "Password reset successfully.",
+  });
+});
+
+export {register, login, logout, forgotPassword, resetPassword}
 
 
