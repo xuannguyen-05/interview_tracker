@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 
 import LanguageSwitcher from "@/components/common/LanguageSwitcher"
+import logo from "@/assets/job-interview.png"
 
 export default function LandingHeader() {
   const { t } = useTranslation()
@@ -9,7 +10,7 @@ export default function LandingHeader() {
     <header className="sticky top-0 z-50 border-b border-black/[0.06] bg-white/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link to="/" className="flex items-center gap-2.5">
-          <img src="/src/assets/job-interview.png" alt="Interview Tracker" className="h-9 w-9" />
+          <img src={logo} alt="Interview Tracker" className="h-9 w-9" />
           <span className="text-sm font-bold text-slate-950 sm:text-base">{t('common.interviewTracker')}</span>
         </Link>
 
