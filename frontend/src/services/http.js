@@ -3,11 +3,14 @@ import { useAuthStore } from "@/stores/useAuthStore"
 
 const http = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:7070/api",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  // allow sending/receiving cookies (httpOnly) for same-origin or configured CORS
   withCredentials: true,
+})
+
+http.interceptors.request.use((config) => {
+  if (config.data instanceof FormData) {
+    delete config.headers["Content-Type"]
+  }
+  return config
 })
 
 // Handle 401 errors globally - clear auth and redirect to login

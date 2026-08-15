@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars, react-hooks/set-state-in-effect */
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   getApplications,
   createApplication,
@@ -15,13 +17,6 @@ import {
 } from "@/services/applicationService";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import ReactGA from "@/lib/analytics";
-
-const STATUS_ORDER = [
-  { key: "APPLIED", label: "Applied" },
-  { key: "INTERVIEW", label: "Interview" },
-  { key: "OFFER", label: "Offer" },
-  { key: "REJECTED", label: "Rejected" },
-];
 
 function LegacyApplicationPage() {
   const [applications, setApplications] = useState([]);
@@ -160,45 +155,6 @@ function LegacyApplicationPage() {
   );
 }
 
-const BOARD_STATUSES = [
-  {
-    key: "APPLIED",
-    label: "Applied",
-    color: "#3B82F6",
-    bg: "#EFF6FF",
-    columnBg: "#F5F8FF",
-  },
-  {
-    key: "INTERVIEW",
-    label: "Interview",
-    color: "#8B5CF6",
-    bg: "#F5F3FF",
-    columnBg: "#FAF8FF",
-  },
-  {
-    key: "OFFER",
-    label: "Offer",
-    color: "#10B981",
-    bg: "#ECFDF5",
-    columnBg: "#F4FCF8",
-  },
-  {
-    key: "REJECTED",
-    label: "Rejected",
-    color: "#EF4444",
-    bg: "#FEF2F2",
-    columnBg: "#FFF7F7",
-  },
-];
-
-const MONTH_OPTIONS = [
-  { value: "ALL", label: "All months" },
-  ...Array.from({ length: 12 }, (_, index) => ({
-    value: String(index + 1),
-    label: new Date(2000, index, 1).toLocaleString("en-US", { month: "long" }),
-  })),
-];
-
 function PageIcon({ name, className = "h-4 w-4" }) {
   const paths = {
     search: "M21 21l-4.3-4.3M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z",
@@ -279,6 +235,50 @@ function ViewToggle({ viewMode, onChange }) {
 }
 
 export default function ApplicationPage() {
+  const { t, i18n } = useTranslation();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const highlightApplicationId = location.state?.highlightApplicationId;
+  const BOARD_STATUSES = [
+    {
+      key: "APPLIED",
+      label: t("application.applied"),
+      color: "#3B82F6",
+      bg: "#EFF6FF",
+      columnBg: "#F5F8FF",
+    },
+    {
+      key: "INTERVIEW",
+      label: t("application.interview"),
+      color: "#8B5CF6",
+      bg: "#F5F3FF",
+      columnBg: "#FAF8FF",
+    },
+    {
+      key: "OFFER",
+      label: t("application.offer"),
+      color: "#10B981",
+      bg: "#ECFDF5",
+      columnBg: "#F4FCF8",
+    },
+    {
+      key: "REJECTED",
+      label: t("application.rejected"),
+      color: "#EF4444",
+      bg: "#FEF2F2",
+      columnBg: "#FFF7F7",
+    },
+  ];
+  const MONTH_OPTIONS = [
+    { value: "ALL", label: t("application.allMonths") },
+    ...Array.from({ length: 12 }, (_, index) => ({
+      value: String(index + 1),
+      label: new Date(2000, index, 1).toLocaleString(
+        i18n.language === "vi" ? "vi-VN" : "en-US",
+        { month: "long" },
+      ),
+    })),
+  ];
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState("");
@@ -291,6 +291,7 @@ export default function ApplicationPage() {
   const [monthFilter, setMonthFilter] = useState("ALL");
   const [yearFilter, setYearFilter] = useState("ALL");
   const [viewMode, setViewMode] = useState("board");
+  const [highlightedCardId, setHighlightedCardId] = useState(null);
 
   function buildQueryParams() {
     const params = {};
@@ -314,7 +315,7 @@ export default function ApplicationPage() {
       setApplications(result.data ?? []);
     } catch (err) {
       console.error(err);
-      setLoadError(getErrorMessage(err, "Could not load applications."));
+      setLoadError(getErrorMessage(err, t("application.loadError")));
     } finally {
       setLoading(false);
     }
@@ -327,6 +328,39 @@ export default function ApplicationPage() {
 
     return () => clearTimeout(timeout);
   }, [search, statusFilter, monthFilter, yearFilter]);
+
+  // Handle highlight scroll after loading completes
+  useEffect(() => {
+    if (loading || !highlightApplicationId) return;
+
+    const element = document.getElementById(
+      `application-card-${highlightApplicationId}`,
+    );
+
+    if (!element) return;
+
+    // đợi render xong rồi mới scroll
+    requestAnimationFrame(() => {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+
+      setHighlightedCardId(highlightApplicationId);
+
+      const timer = setTimeout(() => {
+        setHighlightedCardId(null);
+
+        // Xóa state để F5 không highlight lại
+        navigate(location.pathname, {
+          replace: true,
+          state: null,
+        });
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    });
+  }, [loading, highlightApplicationId, navigate, location.pathname]);
 
   useEffect(() => {
     function onQuick() {
@@ -369,7 +403,7 @@ export default function ApplicationPage() {
   }
 
   async function handleDelete(applicationId) {
-    const ok = window.confirm("Delete this application?");
+    const ok = window.confirm(t("application.deleteConfirm"));
     if (!ok) return;
     await deleteApplication(applicationId);
 
@@ -379,16 +413,46 @@ export default function ApplicationPage() {
   }
 
   async function handleDropStatus(applicationId, status) {
+    const draggedId = Number(applicationId);
+    const currentApplication = applications.find(
+      (item) => item.application_id === draggedId,
+    );
+
+    if (!currentApplication) {
+      setDraggingId(null);
+      setOverColumn(null);
+      return;
+    }
+
+    if (currentApplication.status === status) {
+      setDraggingId(null);
+      setOverColumn(null);
+      return;
+    }
+
+    const previousStatus = currentApplication.status;
+
+    setApplications((prev) =>
+      prev.map((item) =>
+        item.application_id === draggedId ? { ...item, status } : item,
+      ),
+    );
+
     try {
-      await updateApplicationStatus(applicationId, status);
+      await updateApplicationStatus(draggedId, status);
 
       ReactGA.event("update_application_status", {
-        from_status: application?.status,
+        from_status: previousStatus,
         to_status: status,
       });
-
-      await load(buildQueryParams());
     } catch (err) {
+      setApplications((prev) =>
+        prev.map((item) =>
+          item.application_id === draggedId
+            ? { ...item, status: previousStatus }
+            : item,
+        ),
+      );
       console.error(err);
     } finally {
       setDraggingId(null);
@@ -408,15 +472,15 @@ export default function ApplicationPage() {
   }
 
   const statusOptions = [
-    { value: "ALL", label: "All positions" },
+    { value: "ALL", label: t("application.allPositions") },
     ...BOARD_STATUSES.map((status) => ({
       value: status.key,
-      label: status.label,
+      label: t(`application.${status.key.toLowerCase()}`),
     })),
   ];
 
   const yearOptions = [
-    { value: "ALL", label: "All years" },
+    { value: "ALL", label: t("application.allYears") },
     ...Array.from({ length: 6 }, (_, index) => {
       const year = new Date().getFullYear() - index;
       return { value: String(year), label: String(year) };
@@ -425,7 +489,7 @@ export default function ApplicationPage() {
 
   const timeLabel =
     monthFilter === "ALL" && yearFilter === "ALL"
-      ? "All time"
+      ? t("application.allTime")
       : monthFilter === "ALL"
         ? yearFilter
         : yearFilter === "ALL"
@@ -443,7 +507,7 @@ export default function ApplicationPage() {
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search companies, positions..."
+            placeholder={t("application.searchPlaceholder")}
             className="h-10 w-full rounded-xl border border-black/[0.08] bg-slate-50 pl-11 pr-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
           />
         </div>
@@ -484,7 +548,7 @@ export default function ApplicationPage() {
 
         {loading ? (
           <div className="grid h-full place-items-center text-sm text-slate-400">
-            Loading applications...
+            {t("application.loading")}
           </div>
         ) : viewMode === "list" ? (
           <ApplicationListView
@@ -515,6 +579,7 @@ export default function ApplicationPage() {
                 {(grouped[status.key] ?? []).map((app) => (
                   <div
                     key={app.application_id}
+                    id={`application-card-${app.application_id}`}
                     draggable
                     onDragStart={(event) =>
                       handleDragStart(event, app.application_id)
@@ -531,6 +596,7 @@ export default function ApplicationPage() {
                         setShowModal(true);
                       }}
                       onDelete={handleDelete}
+                      isHighlighted={highlightedCardId === app.application_id}
                     />
                   </div>
                 ))}

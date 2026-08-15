@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import AuthShell from "@/components/auth/AuthShell";
 import { resetPasswordApi } from "@/services/authService";
@@ -9,6 +10,7 @@ export default function ResetPasswordPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
+  const { t } = useTranslation();
 
   const [form, setForm] = useState({
     password: "",
@@ -40,22 +42,22 @@ export default function ResetPasswordPage() {
     event.preventDefault();
 
     if (!form.password.trim()) {
-      setError("Please enter your new password.");
+      setError(t('auth.resetPassword.errors.emptyPassword'));
       return;
     }
 
     if (form.password.length < 8) {
-      setError("Password must be at least 8 characters.");
+      setError(t('auth.resetPassword.errors.tooShort'));
       return;
     }
 
     if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t('auth.resetPassword.errors.noMatch'));
       return;
     }
 
     if (!token) {
-      setError("Invalid reset link. Please request a new password reset.");
+      setError(t('auth.resetPassword.errors.invalidToken'));
       return;
     }
 
@@ -70,7 +72,7 @@ export default function ResetPasswordPage() {
 
       setIsSuccess(true);
     } catch (requestError) {
-      setError(getErrorMessage(requestError, "Failed to reset password. Please try again."));
+      setError(getErrorMessage(requestError, t('auth.resetPassword.errors.resetFailed')));
     } finally {
       setIsSubmitting(false);
     }
@@ -79,9 +81,9 @@ export default function ResetPasswordPage() {
   if (isSuccess) {
     return (
       <AuthShell
-        eyebrow="Interview Tracker"
-        title="Password reset successful"
-        description="Your password has been reset successfully. You can now log in with your new password."
+        eyebrow={t('common.interviewTracker')}
+        title={t('auth.resetPassword.success.title')}
+        description={t('auth.resetPassword.success.description')}
         footerText=""
         footerLinkLabel=""
         footerLinkTo=""
@@ -107,7 +109,7 @@ export default function ResetPasswordPage() {
             onClick={() => navigate("/login")}
             className="mt-4 rounded-2xl bg-indigo-600 px-6 py-3 font-semibold text-white transition hover:bg-indigo-500 w-full"
           >
-            Go to login
+            {t('auth.resetPassword.success.goToLogin')}
           </button>
         </div>
       </AuthShell>
@@ -117,9 +119,9 @@ export default function ResetPasswordPage() {
   if (!token) {
     return (
       <AuthShell
-        eyebrow="Interview Tracker"
-        title="Invalid reset link"
-        description="The password reset link is invalid or has expired. Please request a new password reset."
+        eyebrow={t('common.interviewTracker')}
+        title={t('auth.resetPassword.invalidLink.title')}
+        description={t('auth.resetPassword.invalidLink.description')}
         footerText=""
         footerLinkLabel=""
         footerLinkTo=""
@@ -145,7 +147,7 @@ export default function ResetPasswordPage() {
             onClick={() => navigate("/forgot-password")}
             className="mt-4 rounded-2xl bg-indigo-600 px-6 py-3 font-semibold text-white transition hover:bg-indigo-500 w-full"
           >
-            Request new reset link
+            {t('auth.resetPassword.invalidLink.requestNew')}
           </button>
         </div>
       </AuthShell>
@@ -154,11 +156,11 @@ export default function ResetPasswordPage() {
 
   return (
     <AuthShell
-      eyebrow="Interview Tracker"
-      title="Set new password"
-      description="Enter your new password below. Make sure it's at least 8 characters long."
-      footerText="Remember your password?"
-      footerLinkLabel="Back to login"
+      eyebrow={t('common.interviewTracker')}
+      title={t('auth.resetPassword.title')}
+      description={t('auth.resetPassword.description')}
+      footerText={t('auth.resetPassword.rememberPassword')}
+      footerLinkLabel={t('auth.resetPassword.backToLogin')}
       footerLinkTo="/login"
     >
       <form className="space-y-4" onSubmit={handleSubmit}>
@@ -173,7 +175,7 @@ export default function ResetPasswordPage() {
             htmlFor="reset-password"
             className="text-sm font-medium text-slate-700"
           >
-            New password
+            {t('auth.resetPassword.newPassword')}
           </label>
           <input
             id="reset-password"
@@ -182,7 +184,7 @@ export default function ResetPasswordPage() {
             autoComplete="new-password"
             value={form.password}
             onChange={handleChange}
-            placeholder="••••••••"
+            placeholder={t('auth.resetPassword.passwordPlaceholder')}
             className={inputClassName}
           />
         </div>
@@ -192,7 +194,7 @@ export default function ResetPasswordPage() {
             htmlFor="reset-confirm-password"
             className="text-sm font-medium text-slate-700"
           >
-            Confirm password
+            {t('auth.resetPassword.confirmPassword')}
           </label>
           <input
             id="reset-confirm-password"
@@ -201,7 +203,7 @@ export default function ResetPasswordPage() {
             autoComplete="new-password"
             value={form.confirmPassword}
             onChange={handleChange}
-            placeholder="••••••••"
+            placeholder={t('auth.resetPassword.passwordPlaceholder')}
             className={inputClassName}
           />
         </div>
@@ -211,7 +213,7 @@ export default function ResetPasswordPage() {
           disabled={isSubmitting}
           className={submitClassName}
         >
-          {isSubmitting ? "Resetting..." : "Reset password"}
+          {isSubmitting ? t('auth.resetPassword.submitting') : t('auth.resetPassword.submit')}
         </button>
       </form>
     </AuthShell>

@@ -1,7 +1,7 @@
 import express from 'express'
 import validate from '../../middlewares/validate.middleware.js'
-import {registerSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema} from './auth.schema.js'
-import {register, login, logout, forgotPassword, resetPassword} from './auth.controller.js'
+import {registerSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema, googleLoginSchema} from './auth.schema.js'
+import {register, login, logout, forgotPassword, resetPassword, googleLogin} from './auth.controller.js'
 
 const router = express.Router();
 
@@ -12,5 +12,7 @@ router.post("/logout", logout)
 
 router.post("/forgot-password", validate(forgotPasswordSchema), forgotPassword)
 router.post("/reset-password", validate(resetPasswordSchema), resetPassword)
+
+router.post("/google", validate(googleLoginSchema), googleLogin)
 
 export default router

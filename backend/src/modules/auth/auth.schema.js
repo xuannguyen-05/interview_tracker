@@ -43,3 +43,7 @@ export const resetPasswordSchema = z.object({
     .trim()
     .min(8, "Password must be at least 8 characters."),
 });
+
+export const googleLoginSchema = z.object({
+    credential: z.string().min(1)
+})

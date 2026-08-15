@@ -1,5 +1,6 @@
 import http from "./http"
 import { toastService } from "./toastService"
+import { buildApplicationFormData } from "@/utils/buildApplicationFormData"
 
 export async function getApplications(params = {}) {
   const response = await http.get("/application", { params })
@@ -8,7 +9,8 @@ export async function getApplications(params = {}) {
 
 export async function createApplication(payload) {
   try {
-    const response = await http.post("/application", payload)
+    const formData = buildApplicationFormData(payload)
+    const response = await http.post("/application", formData)
     toastService.showByModule("application", "create", "success")
     return response.data
   } catch (error) {
@@ -41,7 +43,8 @@ export async function deleteApplication(applicationId) {
 
 export async function updateApplication(applicationId, payload) {
   try {
-    const response = await http.patch(`/application/${applicationId}`, payload)
+    const formData = buildApplicationFormData(payload)
+    const response = await http.patch(`/application/${applicationId}`, formData)
     toastService.showByModule("application", "update", "success")
     return response.data
   } catch (error) {

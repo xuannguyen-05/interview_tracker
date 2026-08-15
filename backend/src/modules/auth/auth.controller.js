@@ -1,4 +1,4 @@
-import {registerService, loginService, forgotPasswordService, resetPasswordService} from './auth.service.js'
+import {registerService, loginService, forgotPasswordService, resetPasswordService, googleLoginService} from './auth.service.js'
 import asyncHandler from '../../utils/asyncHandler.js'
 
 
@@ -71,6 +71,17 @@ const resetPassword = asyncHandler(async (req, res) => {
   });
 });
 
-export {register, login, logout, forgotPassword, resetPassword}
+const googleLogin = asyncHandler(async (req, res) => {
+    const { credential } = req.body
+
+    const result = await googleLoginService(credential)
+
+    res.status(200).json({
+        message: "Google login success",
+        data: result
+    })
+})
+
+export {register, login, logout, forgotPassword, resetPassword, googleLogin}
 
 

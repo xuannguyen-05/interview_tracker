@@ -1,0 +1,381 @@
+{
+  "common": {
+    "interviewTracker": "Interview Tracker",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full Name",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "landing": {
+    "header": {
+      "features": "Features",
+      "howItWorks": "How it works",
+      "whyNotExcel": "Why not Excel",
+      "signIn": "Sign in",
+      "getStarted": "Get started"
+    },
+    "hero": {
+      "title": "Track your job applications in one place",
+      "description": "Stop juggling spreadsheets and emails. Manage every application, interview, and follow-up from a single dashboard.",
+      "startTracking": "Start tracking for free",
+      "exploreFeatures": "Explore features"
+    },
+    "problem": {
+      "label": "The problem",
+      "title": "The old way makes it easy to miss opportunities",
+      "description": "Most candidates start with a spreadsheet. It works for a few applications, then quickly becomes hard to maintain as your pipeline grows.",
+      "oldWay": {
+        "title": "The old way — Excel chaos",
+        "company": "Company",
+        "status": "Status",
+        "followUp": "Follow up?",
+        "cv": "CV",
+        "points": [
+          "Hard to see your full pipeline at a glance",
+          "Follow-ups get buried in spreadsheet rows",
+          "No analytics on interview or offer conversion",
+          "Difficult to keep CVs organized per application"
+        ]
+      },
+      "newWay": {
+        "title": "The new way — Interview Tracker",
+        "points": [
+          "Kanban board shows every stage in one view",
+          "Follow-up alerts highlight applications that need action",
+          "Dashboard tracks interview and offer rates over time",
+          "Upload and manage a CV for each application"
+        ]
+      }
+    },
+    "features": {
+      "label": "Features",
+      "title": "Everything you need to stay on top of applications",
+      "description": "Interview Tracker is built around the actual workflow of applying, interviewing, and following up — not generic task management.",
+      "items": [
+        {
+          "title": "Application tracking",
+          "description": "Create, edit, and organize every job application with company, role, dates, notes, and job links."
+        },
+        {
+          "title": "Kanban board",
+          "description": "Drag applications across Applied, Interview, Offer, and Rejected columns to reflect your real pipeline."
+        },
+        {
+          "title": "Dashboard analytics",
+          "description": "See interview rate, offer rate, rejection rate, pipeline progress, and monthly application trends."
+        },
+        {
+          "title": "Follow-up reminders",
+          "description": "Applications that stay in Applied too long are highlighted so you know when to follow up."
+        },
+        {
+          "title": "Real-time notifications",
+          "description": "Get notified when status changes or when an application needs your attention."
+        },
+        {
+          "title": "Resume / CV management",
+          "description": "Attach a PDF resume to each application and open it anytime from your board or list view."
+        }
+      ]
+    },
+    "howItWorks": {
+      "label": "How it works",
+      "title": "A simple workflow from apply to offer",
+      "steps": [
+        {
+          "step": "01",
+          "title": "Add your applications",
+          "description": "Log company, role, apply date, job link, notes, and optionally upload your CV."
+        },
+        {
+          "step": "02",
+          "title": "Move them through stages",
+          "description": "Use the Kanban board to track progress from Applied to Interview, Offer, or Rejected."
+        },
+        {
+          "step": "03",
+          "title": "Review and act",
+          "description": "Check the dashboard for trends, respond to notifications, and follow up when needed."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to organize your job search?",
+      "description": "Create an account and start tracking applications with a Kanban board, analytics dashboard, notifications, and CV uploads — all in one project you can actually use.",
+      "createAccount": "Create free account",
+      "signIn": "Sign in"
+    },
+    "footer": {
+      "tagline": "Interview Tracker — job application management project",
+      "features": "Features",
+      "howItWorks": "How it works",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Log in to your account",
+      "description": "Track applications, interviews, and follow-ups in one organized workspace.",
+      "emailPlaceholder": "you@university.edu",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Forgot password?",
+      "submit": "Log in",
+      "submitting": "Logging in...",
+      "continueWithGoogle": "Continue with Google",
+      "or": "or",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create account",
+      "errors": {
+        "emptyFields": "Please enter your email and password.",
+        "invalidLogin": "Invalid login. Please try again.",
+        "invalidCredentials": "Invalid email or password.",
+        "googleUnavailable": "Google login is not available right now.",
+        "googleFailed": "Google Sign-In failed. Please try again."
+      }
+    },
+    "register": {
+      "title": "Create new account",
+      "description": "Start managing your internship with a clear and scalable workspace.",
+      "fullNamePlaceholder": "Nguyen Van A",
+      "emailPlaceholder": "you@university.edu",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "hasAccount": "Already have an account?",
+      "login": "Log in",
+      "errors": {
+        "emptyFields": "Please enter your full name, email and password.",
+        "createFailed": "Could not create account. Please try again."
+      }
+    },
+    "forgotPassword": {
+      "title": "Reset your password",
+      "description": "Enter your email address and we'll send you a link to reset your password.",
+      "emailPlaceholder": "you@university.edu",
+      "submit": "Send reset link",
+      "submitting": "Sending...",
+      "rememberPassword": "Remember your password?",
+      "backToLogin": "Back to login",
+      "success": {
+        "title": "Check your email",
+        "description": "We've sent a password reset link to your email. Please check your inbox and follow the instructions.",
+        "expires": "The link will expire in 15 minutes."
+      },
+      "errors": {
+        "emptyEmail": "Please enter your email.",
+        "sendFailed": "Failed to send reset link. Please try again."
+      }
+    },
+    "resetPassword": {
+      "title": "Set new password",
+      "description": "Enter your new password below. Make sure it's at least 8 characters long.",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Reset password",
+      "submitting": "Resetting...",
+      "rememberPassword": "Remember your password?",
+      "backToLogin": "Back to login",
+      "success": {
+        "title": "Password reset successful",
+        "description": "Your password has been reset successfully. You can now log in with your new password.",
+        "goToLogin": "Go to login"
+      },
+      "invalidLink": {
+        "title": "Invalid reset link",
+        "description": "The password reset link is invalid or has expired. Please request a new password reset.",
+        "requestNew": "Request new reset link"
+      },
+      "errors": {
+        "emptyPassword": "Please enter your new password.",
+        "tooShort": "Password must be at least 8 characters.",
+        "noMatch": "Passwords do not match.",
+        "invalidToken": "Invalid reset link. Please request a new password reset.",
+        "resetFailed": "Failed to reset password. Please try again."
+      }
+    }
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "myApplications": "My Applications",
+    "quickAddJob": "Quick Add Job",
+    "notifications": "Notifications",
+    "signOut": "Sign out"
+  },
+  "toast": {
+    "general": {
+      "loading": "Loading...",
+      "success": "Success",
+      "error": "Something went wrong"
+    },
+    "auth": {
+      "login": {
+        "success": "Logged in successfully",
+        "error": "Login failed"
+      },
+      "google": {
+        "success": "Google login successful",
+        "error": "Google login failed"
+      },
+      "logout": {
+        "success": "Logged out successfully",
+        "error": "Logout failed"
+      },
+      "register": {
+        "success": "Account created successfully",
+        "error": "Account creation failed"
+      },
+      "forgotPassword": {
+        "success": "Password reset link sent",
+        "error": "Failed to send reset link"
+      },
+      "resetPassword": {
+        "success": "Password reset successfully",
+        "error": "Password reset failed"
+      }
+    },
+    "application": {
+      "create": {
+        "success": "Application created successfully",
+        "error": "Failed to create application"
+      },
+      "update": {
+        "success": "Application updated successfully",
+        "error": "Failed to update application"
+      },
+      "delete": {
+        "success": "Application deleted successfully",
+        "error": "Failed to delete application",
+        "confirm": "Delete this application?"
+      },
+      "updateStatus": {
+        "success": "Application status updated",
+        "error": "Failed to update application status"
+      }
+    },
+    "notification": {
+      "markAsRead": {
+        "success": "Notification marked as read",
+        "error": "Failed to mark notification as read"
+      },
+      "markAllAsRead": {
+        "success": "All notifications marked as read",
+        "error": "Failed to mark notifications as read"
+      }
+    }
+  },
+  "notifications": {
+    "defaultCompany": "Company",
+    "INTERVIEW": {
+      "title": "Interview Invitation",
+      "message": "{{company}} moved your application to Interview."
+    },
+    "OFFER": {
+      "title": "Congratulations!",
+      "message": "You received an offer from {{company}}."
+    },
+    "REJECTED": {
+      "title": "Application Update",
+      "message": "{{company}} marked your application as Rejected."
+    },
+    "FOLLOW_UP_7": {
+      "title": "Follow Up Reminder",
+      "message": "No response from {{company}} for 7 days."
+    },
+    "FOLLOW_UP_10": {
+      "title": "Follow Up Reminder",
+      "message": "No response from {{company}} for 10 days."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalApplications": "Total Applications",
+    "allTime": "All time",
+    "interviewRate": "Interview Rate",
+    "interviews": "Interviews",
+    "offerRate": "Offer Rate",
+    "offers": "Offers",
+    "rejectionRate": "Rejection Rate",
+    "rejections": "Rejections",
+    "funnel": "Application Pipeline",
+    "funnelSubtitle": "Applications by stage",
+    "funnelTooltip": {
+      "applications": "applications",
+      "conversion": "conversion"
+    },
+    "monthlyTrends": "Monthly Trends",
+    "monthlyApplications": {
+      "title": "Monthly Applications",
+      "subtitle": "Application trend by month",
+      "tooltipMonth": "Month {{month}}",
+      "applications": "applications"
+    },
+    "urgentActions": "Urgent Actions",
+    "urgentDescription": "applications need follow-up",
+    "noUrgent": "No urgent applications",
+    "recentApplications": "Recent Applications",
+    "recentDescription": "Latest job applications",
+    "noRecent": "No recent applications"
+  },
+  "application": {
+    "title": "My Applications",
+    "searchPlaceholder": "Search companies, positions...",
+    "allPositions": "All positions",
+    "allMonths": "All months",
+    "allYears": "All years",
+    "allTime": "All time",
+    "applied": "Applied",
+    "interview": "Interview",
+    "offer": "Offer",
+    "rejected": "Rejected",
+    "boardView": "Board view",
+    "listView": "List view",
+    "loading": "Loading applications...",
+    "loadError": "Could not load applications.",
+    "deleteConfirm": "Delete this application?",
+    "deleteSuccess": "Application deleted successfully",
+    "notifications": {
+      "title": "Notifications",
+      "markAllAsRead": "Mark all as read",
+      "loading": "Loading notifications...",
+      "empty": "No notifications yet"
+    },
+    "table": {
+      "noApplications": "No applications",
+      "company": "Company",
+      "position": "Position",
+      "status": "Status",
+      "applied": "Applied",
+      "cv": "CV",
+      "view": "View"
+    },
+    "modal": {
+      "addTitle": "Add application",
+      "editTitle": "Edit application",
+      "close": "Close",
+      "company": "Company",
+      "position": "Position",
+      "applyDate": "Apply date",
+      "jobUrl": "Job URL",
+      "notes": "Notes",
+      "cancel": "Cancel",
+      "saveApplication": "Save application",
+      "saveChanges": "Save changes",
+      "initialStatus": "Initial status",
+      "resume": "Resume",
+      "resumeHint": "Attach a PDF resume",
+      "currentCv": "Current CV",
+      "replaceCv": "Replace CV",
+      "viewCv": "View CV",
+      "changeFile": "Change file",
+      "choosePdf": "Choose PDF",
+      "remove": "Remove",
+      "noFileSelected": "No file selected",
+      "uploading": "Uploading...",
+      "saving": "Saving..."
+    }
+  }
+}

@@ -1,0 +1,381 @@
+{
+  "common": {
+    "interviewTracker": "Interview Tracker",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "fullName": "Họ và tên",
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "success": "Thành công"
+  },
+  "landing": {
+    "header": {
+      "features": "Tính năng",
+      "howItWorks": "Cách hoạt động",
+      "whyNotExcel": "Tại sao không dùng Excel",
+      "signIn": "Đăng nhập",
+      "getStarted": "Bắt đầu"
+    },
+    "hero": {
+      "title": "Theo dõi hồ sơ ứng tuyển của bạn ở một nơi",
+      "description": "Không còn phải loay hoay với bảng tính và email. Quản lý mọi hồ sơ, cuộc phỏng vấn và theo dõi từ một bảng điều khiển duy nhất.",
+      "startTracking": "Bắt đầu theo dõi miễn phí",
+      "exploreFeatures": "Khám phá tính năng"
+    },
+    "problem": {
+      "label": "Vấn đề",
+      "title": "Cách cũ khiến bạn dễ bỏ lỡ cơ hội",
+      "description": "Hầu hết ứng viên bắt đầu với bảng tính. Nó hoạt động tốt với vài hồ sơ, nhưng nhanh chóng trở nên khó duy trì khi quy trình của bạn phát triển.",
+      "oldWay": {
+        "title": "Cách cũ — Bảng tính lộn xộn",
+        "company": "Công ty",
+        "status": "Trạng thái",
+        "followUp": "Theo dõi?",
+        "cv": "CV",
+        "points": [
+          "Khó nhìn thấy toàn bộ quy trình một cách nhanh chóng",
+          "Việc theo dõi bị chìm trong các hàng bảng tính",
+          "Không có phân tích về tỷ lệ phỏng vấn hoặc nhận offer",
+          "Khó tổ chức CV cho từng hồ sơ"
+        ]
+      },
+      "newWay": {
+        "title": "Cách mới — Interview Tracker",
+        "points": [
+          "Bảng Kanban hiển thị mọi giai đoạn trong một giao diện",
+          "Cảnh báo theo dõi nhấn mạnh các hồ sơ cần hành động",
+          "Bảng điều khiển theo dõi tỷ lệ phỏng vấn và nhận offer theo thời gian",
+          "Tải lên và quản lý CV cho từng hồ sơ"
+        ]
+      }
+    },
+    "features": {
+      "label": "Tính năng",
+      "title": "Mọi thứ bạn cần để quản lý hồ sơ ứng tuyển",
+      "description": "Interview Tracker được xây dựng dựa trên quy trình thực tế của nộp đơn, phỏng vấn và theo dõi — không phải quản lý tác vụ chung chung.",
+      "items": [
+        {
+          "title": "Theo dõi hồ sơ",
+          "description": "Tạo, chỉnh sửa và tổ chức mọi hồ sơ ứng tuyển với thông tin công ty, vị trí, ngày tháng, ghi chú và liên kết công việc."
+        },
+        {
+          "title": "Bảng Kanban",
+          "description": "Kéo hồ sơ qua các cột Đã nộp, Phỏng vấn, Nhận offer và Bị từ chối để phản ánh quy trình thực tế của bạn."
+        },
+        {
+          "title": "Phân tích bảng điều khiển",
+          "description": "Xem tỷ lệ phỏng vấn, tỷ lệ nhận offer, tỷ lệ từ chối, tiến trình ứng tuyển và xu hướng hồ sơ hàng tháng."
+        },
+        {
+          "title": "Nhắc nhở theo dõi",
+          "description": "Các hồ sơ ở trạng thái Đã nộp quá lâu sẽ được nhấn mạnh để bạn biết khi nào cần theo dõi."
+        },
+        {
+          "title": "Thông báo thời gian thực",
+          "description": "Nhận thông báo khi trạng thái thay đổi hoặc khi hồ sơ cần sự chú ý của bạn."
+        },
+        {
+          "title": "Quản lý CV",
+          "description": "Đính kèm CV PDF vào từng hồ sơ và mở bất cứ lúc nào từ bảng hoặc danh sách của bạn."
+        }
+      ]
+    },
+    "howItWorks": {
+      "label": "Cách hoạt động",
+      "title": "Quy trình đơn giản từ nộp đơn đến nhận offer",
+      "steps": [
+        {
+          "step": "01",
+          "title": "Thêm hồ sơ của bạn",
+          "description": "Ghi lại công ty, vị trí, ngày nộp, liên kết công việc, ghi chú và tùy chọn tải lên CV của bạn."
+        },
+        {
+          "step": "02",
+          "title": "Di chuyển qua các giai đoạn",
+          "description": "Sử dụng bảng Kanban để theo dõi tiến trình từ Đã nộp đến Phỏng vấn, Nhận offer hoặc Bị từ chối."
+        },
+        {
+          "step": "03",
+          "title": "Xem xét và hành động",
+          "description": "Kiểm tra bảng điều khiển để xem xu hướng, phản hồi thông báo và theo dõi khi cần thiết."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Sẵn sàng tổ chức quá trình tìm việc của bạn?",
+      "description": "Tạo tài khoản và bắt đầu theo dõi hồ sơ với bảng Kanban, bảng điều khiển phân tích, thông báo và tải lên CV — tất cả trong một dự án bạn có thể thực sự sử dụng.",
+      "createAccount": "Tạo tài khoản miễn phí",
+      "signIn": "Đăng nhập"
+    },
+    "footer": {
+      "tagline": "Interview Tracker — dự án quản lý hồ sơ ứng tuyển",
+      "features": "Tính năng",
+      "howItWorks": "Cách hoạt động",
+      "privacy": "Quyền riêng tư",
+      "terms": "Điều khoản"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Đăng nhập vào tài khoản",
+      "description": "Theo dõi hồ sơ, phỏng vấn và theo dõi trong một không gian làm việc có tổ chức.",
+      "emailPlaceholder": "bạn@university.edu",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Quên mật khẩu?",
+      "submit": "Đăng nhập",
+      "submitting": "Đang đăng nhập...",
+      "continueWithGoogle": "Tiếp tục với Google",
+      "or": "hoặc",
+      "noAccount": "Chưa có tài khoản?",
+      "createAccount": "Tạo tài khoản",
+      "errors": {
+        "emptyFields": "Vui lòng nhập email và mật khẩu.",
+        "invalidLogin": "Đăng nhập không hợp lệ. Vui lòng thử lại.",
+        "invalidCredentials": "Email hoặc mật khẩu không hợp lệ.",
+        "googleUnavailable": "Đăng nhập Google hiện không khả dụng.",
+        "googleFailed": "Đăng nhập Google thất bại. Vui lòng thử lại."
+      }
+    },
+    "register": {
+      "title": "Tạo tài khoản mới",
+      "description": "Bắt đầu quản lý thực tập của bạn với không gian làm việc rõ ràng và có thể mở rộng.",
+      "fullNamePlaceholder": "Nguyễn Văn A",
+      "emailPlaceholder": "bạn@university.edu",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Tạo tài khoản",
+      "submitting": "Đang tạo tài khoản...",
+      "hasAccount": "Đã có tài khoản?",
+      "login": "Đăng nhập",
+      "errors": {
+        "emptyFields": "Vui lòng nhập họ tên, email và mật khẩu.",
+        "createFailed": "Không thể tạo tài khoản. Vui lòng thử lại."
+      }
+    },
+    "forgotPassword": {
+      "title": "Đặt lại mật khẩu",
+      "description": "Nhập địa chỉ email của bạn và chúng tôi sẽ gửi cho bạn một liên kết để đặt lại mật khẩu.",
+      "emailPlaceholder": "bạn@university.edu",
+      "submit": "Gửi liên kết đặt lại",
+      "submitting": "Đang gửi...",
+      "rememberPassword": "Nhớ mật khẩu?",
+      "backToLogin": "Quay lại đăng nhập",
+      "success": {
+        "title": "Kiểm tra email",
+        "description": "Chúng tôi đã gửi liên kết đặt lại mật khẩu đến email của bạn. Vui lòng kiểm tra hộp thư và làm theo hướng dẫn.",
+        "expires": "Liên kết sẽ hết hạn sau 15 phút."
+      },
+      "errors": {
+        "emptyEmail": "Vui lòng nhập email.",
+        "sendFailed": "Không thể gửi liên kết đặt lại. Vui lòng thử lại."
+      }
+    },
+    "resetPassword": {
+      "title": "Đặt mật khẩu mới",
+      "description": "Nhập mật khẩu mới của bạn bên dưới. Đảm bảo nó có ít nhất 8 ký tự.",
+      "newPassword": "Mật khẩu mới",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Đặt lại mật khẩu",
+      "submitting": "Đang đặt lại...",
+      "rememberPassword": "Nhớ mật khẩu?",
+      "backToLogin": "Quay lại đăng nhập",
+      "success": {
+        "title": "Đặt lại mật khẩu thành công",
+        "description": "Mật khẩu của bạn đã được đặt lại thành công. Bạn có thể đăng nhập bằng mật khẩu mới.",
+        "goToLogin": "Đến đăng nhập"
+      },
+      "invalidLink": {
+        "title": "Liên kết đặt lại không hợp lệ",
+        "description": "Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu đặt lại mật khẩu mới.",
+        "requestNew": "Yêu cầu liên kết mới"
+      },
+      "errors": {
+        "emptyPassword": "Vui lòng nhập mật khẩu mới.",
+        "tooShort": "Mật khẩu phải có ít nhất 8 ký tự.",
+        "noMatch": "Mật khẩu không khớp.",
+        "invalidToken": "Liên kết đặt lại không hợp lệ. Vui lòng yêu cầu đặt lại mật khẩu mới.",
+        "resetFailed": "Không thể đặt lại mật khẩu. Vui lòng thử lại."
+      }
+    }
+  },
+  "sidebar": {
+    "dashboard": "Bảng điều khiển",
+    "myApplications": "Hồ sơ của tôi",
+    "quickAddJob": "Thêm nhanh công việc",
+    "notifications": "Thông báo",
+    "signOut": "Đăng xuất"
+  },
+  "toast": {
+    "general": {
+      "loading": "Đang tải...",
+      "success": "Thành công",
+      "error": "Có lỗi xảy ra"
+    },
+    "auth": {
+      "login": {
+        "success": "Đăng nhập thành công",
+        "error": "Đăng nhập thất bại"
+      },
+      "google": {
+        "success": "Đăng nhập Google thành công",
+        "error": "Đăng nhập Google thất bại"
+      },
+      "logout": {
+        "success": "Đăng xuất thành công",
+        "error": "Đăng xuất thất bại"
+      },
+      "register": {
+        "success": "Tạo tài khoản thành công",
+        "error": "Tạo tài khoản thất bại"
+      },
+      "forgotPassword": {
+        "success": "Liên kết đặt lại mật khẩu đã gửi",
+        "error": "Không thể gửi liên kết đặt lại"
+      },
+      "resetPassword": {
+        "success": "Đặt lại mật khẩu thành công",
+        "error": "Đặt lại mật khẩu thất bại"
+      }
+    },
+    "application": {
+      "create": {
+        "success": "Tạo hồ sơ thành công",
+        "error": "Không thể tạo hồ sơ"
+      },
+      "update": {
+        "success": "Cập nhật hồ sơ thành công",
+        "error": "Không thể cập nhật hồ sơ"
+      },
+      "delete": {
+        "success": "Xóa hồ sơ thành công",
+        "error": "Không thể xóa hồ sơ",
+        "confirm": "Xóa hồ sơ này?"
+      },
+      "updateStatus": {
+        "success": "Cập nhật trạng thái thành công",
+        "error": "Không thể cập nhật trạng thái"
+      }
+    },
+    "notification": {
+      "markAsRead": {
+        "success": "Đã đánh dấu thông báo là đã đọc",
+        "error": "Không thể đánh dấu thông báo là đã đọc"
+      },
+      "markAllAsRead": {
+        "success": "Tất cả thông báo đã được đọc",
+        "error": "Không thể đánh dấu tất cả thông báo là đã đọc"
+      }
+    }
+  },
+  "notifications": {
+    "defaultCompany": "Công ty",
+    "INTERVIEW": {
+      "title": "Lời mời phỏng vấn",
+      "message": "{{company}} đã chuyển hồ sơ của bạn sang giai đoạn Phỏng vấn."
+    },
+    "OFFER": {
+      "title": "Chúc mừng!",
+      "message": "Bạn đã nhận được offer từ {{company}}."
+    },
+    "REJECTED": {
+      "title": "Cập nhật hồ sơ",
+      "message": "{{company}} đã đánh dấu hồ sơ của bạn là Đã từ chối."
+    },
+    "FOLLOW_UP_7": {
+      "title": "Nhắc nhở theo dõi",
+      "message": "Chưa có phản hồi từ {{company}} trong 7 ngày."
+    },
+    "FOLLOW_UP_10": {
+      "title": "Nhắc nhở theo dõi",
+      "message": "Chưa có phản hồi từ {{company}} trong 10 ngày."
+    }
+  },
+  "dashboard": {
+    "title": "Bảng điều khiển",
+    "totalApplications": "Tổng hồ sơ",
+    "allTime": "Tất cả thời gian",
+    "interviewRate": "Tỷ lệ phỏng vấn",
+    "interviews": "Phỏng vấn",
+    "offerRate": "Tỷ lệ nhận offer",
+    "offers": "Nhận offer",
+    "rejectionRate": "Tỷ lệ bị từ chối",
+    "rejections": "Bị từ chối",
+    "funnel": "Tiến trình ứng tuyển",
+    "funnelSubtitle": "Hồ sơ theo giai đoạn",
+    "funnelTooltip": {
+      "applications": "hồ sơ",
+      "conversion": "chuyển đổi"
+    },
+    "monthlyTrends": "Xu hướng hàng tháng",
+    "monthlyApplications": {
+      "title": "Hồ sơ ứng tuyển theo tháng",
+      "subtitle": "Xu hướng hồ sơ theo tháng",
+      "tooltipMonth": "Tháng {{month}}",
+      "applications": "hồ sơ"
+    },
+    "urgentActions": "Hành động khẩn cấp",
+    "urgentDescription": "hồ sơ cần theo dõi",
+    "noUrgent": "Không có hồ sơ khẩn cấp",
+    "recentApplications": "Hồ sơ gần đây",
+    "recentDescription": "Hồ sơ ứng tuyển mới nhất",
+    "noRecent": "Không có hồ sơ gần đây"
+  },
+  "application": {
+    "title": "Hồ sơ của tôi",
+    "searchPlaceholder": "Tìm công ty, vị trí...",
+    "allPositions": "Tất cả vị trí",
+    "allMonths": "Tất cả tháng",
+    "allYears": "Tất cả năm",
+    "allTime": "Tất cả thời gian",
+    "applied": "Đã nộp",
+    "interview": "Phỏng vấn",
+    "offer": "Nhận offer",
+    "rejected": "Bị từ chối",
+    "boardView": "Xem bảng",
+    "listView": "Xem danh sách",
+    "loading": "Đang tải hồ sơ...",
+    "loadError": "Không thể tải hồ sơ.",
+    "deleteConfirm": "Xóa hồ sơ này?",
+    "deleteSuccess": "Đã xóa hồ sơ thành công",
+    "notifications": {
+      "title": "Thông báo",
+      "markAllAsRead": "Đánh dấu tất cả là đã đọc",
+      "loading": "Đang tải thông báo...",
+      "empty": "Chưa có thông báo nào"
+    },
+    "table": {
+      "noApplications": "Không có hồ sơ",
+      "company": "Công ty",
+      "position": "Vị trí",
+      "status": "Trạng thái",
+      "applied": "Đã nộp",
+      "cv": "CV",
+      "view": "Xem"
+    },
+    "modal": {
+      "addTitle": "Thêm hồ sơ",
+      "editTitle": "Chỉnh sửa hồ sơ",
+      "close": "Đóng",
+      "company": "Công ty",
+      "position": "Vị trí",
+      "applyDate": "Ngày nộp",
+      "jobUrl": "URL công việc",
+      "notes": "Ghi chú",
+      "cancel": "Hủy",
+      "saveApplication": "Lưu hồ sơ",
+      "saveChanges": "Lưu thay đổi",
+      "initialStatus": "Trạng thái ban đầu",
+      "resume": "CV",
+      "resumeHint": "Đính kèm CV dạng PDF",
+      "currentCv": "CV hiện tại",
+      "replaceCv": "Thay thế CV",
+      "viewCv": "Xem CV",
+      "changeFile": "Đổi file",
+      "choosePdf": "Chọn PDF",
+      "remove": "Xóa",
+      "noFileSelected": "Chưa chọn file",
+      "uploading": "Đang tải lên...",
+      "saving": "Đang lưu..."
+    }
+  }
+}

@@ -1,0 +1,48 @@
+services:
+  backend:
+    build: ./backend
+    container_name: interview-backend
+    ports:
+      - "7070:7070"
+    env_file:
+      - ./backend/.env.docker
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - interview-network
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    container_name: interview-frontend
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./frontend/.env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - interview-network
+
+  db:
+    image: postgres:17
+    container_name: interview-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 210505
+      POSTGRES_DB: interview_tracker
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - interview-network
+
+networks:
+  interview-network:
+
+volumes:
+  postgres_data:

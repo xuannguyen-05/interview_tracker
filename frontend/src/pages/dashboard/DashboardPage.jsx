@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
+import { useLocation } from "react-router-dom"
 
 import { useAuthStore } from "@/stores/useAuthStore"
 import { getErrorMessage } from "@/utils/getErrorMessage"
@@ -7,6 +9,7 @@ import { getErrorMessage } from "@/utils/getErrorMessage"
 import StatCard from "@/components/dashboard/StatCard"
 import Funnel from "@/components/dashboard/Funnel"
 import MonthlyChart from "@/components/dashboard/MonthlyChart"
+import AddApplicationModal from "@/components/application/AddApplicationModal"
 
 import {
   getDashboard,
@@ -40,6 +43,8 @@ const XIcon = () => (
 
 export default function DashboardPage() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const { t } = useTranslation()
 
   const clearAccessToken = useAuthStore(
     (state) => state.clearAccessToken
@@ -48,6 +53,16 @@ export default function DashboardPage() {
   const [data, setData] = useState(null)
   const [monthly, setMonthly] = useState([])
   const [error, setError] = useState("")
+  const [showQuickAdd, setShowQuickAdd] = useState(false)
+
+  useEffect(() => {
+    function onQuick() {
+      setShowQuickAdd(true)
+    }
+
+    window.addEventListener("quickAdd", onQuick)
+    return () => window.removeEventListener("quickAdd", onQuick)
+  }, [])
 
   useEffect(() => {
     async function load() {
@@ -67,44 +82,54 @@ export default function DashboardPage() {
   }, [])
 
   const summary = data?.summary ?? {}
+  const statusLabels = {
+    applied: t('application.applied'),
+    interview: t('application.interview'),
+    offer: t('application.offer'),
+  }
 
   // Chuyển object funnel từ backend thành array cho Funnel component
   const funnel = data?.funnel
     ? [
         {
-          label: "Applied",
+          label: statusLabels.applied,
           count: data.funnel.total_applications,
           percent: 100,
         },
         {
-          label: "Interview",
+          label: statusLabels.interview,
           count: data.funnel.interview,
           percent: data.funnel.interview_rate,
         },
         {
-          label: "Offer",
+          label: statusLabels.offer,
           count: data.funnel.offer,
           percent: data.funnel.offer_rate,
         },
       ]
     : []
 
+  function handleApplicationClick(application) {
+    navigate('/application', { state: { highlightApplicationId: application.application_id } })
+  }
+
+  async function handleQuickAddSubmit(payload) {
+    try {
+      const { createApplication } = await import("@/services/applicationService")
+      await createApplication(payload)
+      setShowQuickAdd(false)
+      const res = await getDashboard()
+      setData(res.data)
+      const m = await getMonthlyStats(new Date().getFullYear())
+      setMonthly(m.data || [])
+    } catch (err) {
+      console.error(err)
+      setError(getErrorMessage(err, "Could not create application."))
+    }
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center px-6 py-4">
-          <div>
-            <p className="text-sm font-medium text-indigo-600">
-              Interview Tracker
-            </p>
-
-            <h1 className="text-2xl font-bold">
-              Dashboard
-            </h1>
-          </div>
-        </div>
-      </header>
-
       <section className="mx-auto max-w-6xl px-6 py-8 pb-20">
         {error ? (
           <div className="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
@@ -114,30 +139,30 @@ export default function DashboardPage() {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <StatCard
-            label="Total Applications"
+            label={t('dashboard.totalApplications')}
             value={summary.total_applications ?? 0}
-            sub="All time"
+            sub={t('dashboard.allTime')}
             icon={<BriefcaseIcon />}
           />
 
           <StatCard
-            label="Interview Rate"
+            label={t('dashboard.interviewRate')}
             value={`${(summary.interview_rate ?? 0).toFixed(1)}%`}
-            sub={`${summary.interview ?? 0} interviews`}
+            sub={`${summary.interview ?? 0} ${t('dashboard.interviews')}`}
             icon={<ChatIcon />}
           />
 
           <StatCard
-            label="Offer Rate"
+            label={t('dashboard.offerRate')}
             value={`${(summary.offer_rate ?? 0).toFixed(1)}%`}
-            sub={`${summary.offer ?? 0} offers`}
+            sub={`${summary.offer ?? 0} ${t('dashboard.offers')}`}
             icon={<StarIcon />}
           />
 
           <StatCard
-            label="Rejection Rate"
+            label={t('dashboard.rejectionRate')}
             value={`${(summary.rejection_rate ?? 0).toFixed(1)}%`}
-            sub={`${summary.rejected ?? 0} rejections`}
+            sub={`${summary.rejected ?? 0} ${t('dashboard.rejections')}`}
             icon={<XIcon />}
           />
         </div>
@@ -157,9 +182,9 @@ export default function DashboardPage() {
             <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h4 className="text-lg font-semibold">Urgent Actions</h4>
+                <h4 className="text-lg font-semibold">{t('dashboard.urgentActions')}</h4>
                 <p className="text-sm text-slate-400">
-                  {data?.urgentApplications?.length || 0} applications need follow-up
+                  {data?.urgentApplications?.length || 0} {t('dashboard.urgentDescription')}
                 </p>
               </div>
               <div className="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center">
@@ -175,6 +200,7 @@ export default function DashboardPage() {
                 return (
                   <li
                     key={a.application_id}
+                    onClick={() => handleApplicationClick(a)}
                     className="group flex items-center justify-between rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-white px-4 py-3 hover:shadow-md transition-all cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
@@ -203,7 +229,7 @@ export default function DashboardPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <p className="text-sm text-slate-400">No urgent applications</p>
+                  <p className="text-sm text-slate-400">{t('dashboard.noUrgent')}</p>
                 </li>
               )}
             </ul>
@@ -214,8 +240,8 @@ export default function DashboardPage() {
             <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h4 className="text-lg font-semibold">Recent Applications</h4>
-                  <p className="text-sm text-slate-400">Latest job applications</p>
+                  <h4 className="text-lg font-semibold">{t('dashboard.recentApplications')}</h4>
+                  <p className="text-sm text-slate-400">{t('dashboard.recentDescription')}</p>
                 </div>
                 <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
                   <svg className="h-4 w-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -228,6 +254,7 @@ export default function DashboardPage() {
                 {data?.recentApplications?.map((a) => (
                   <li
                     key={a.application_id}
+                    onClick={() => handleApplicationClick(a)}
                     className="group flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 hover:bg-slate-100 hover:shadow-sm transition-all cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
@@ -251,7 +278,7 @@ export default function DashboardPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
-                    <p className="text-sm text-slate-400">No recent applications</p>
+                    <p className="text-sm text-slate-400">{t('dashboard.noRecent')}</p>
                   </li>
                 )}
               </ul>
@@ -259,6 +286,12 @@ export default function DashboardPage() {
           </div>
         </div>
       </section>
+
+      <AddApplicationModal
+        open={showQuickAdd}
+        onClose={() => setShowQuickAdd(false)}
+        onCreate={handleQuickAddSubmit}
+      />
     </div>
   )
 }

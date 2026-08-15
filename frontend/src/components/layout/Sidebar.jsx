@@ -6,6 +6,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { getUnreadCount } from "@/services/notificationService";
 import { toastService } from "@/services/toastService";
 import NotificationPanel from "@/components/notification/NotificationPanel";
+import { useTranslation } from "react-i18next";
 
 import { socket } from "@/socket/socket";
 
@@ -42,6 +43,7 @@ export default function Sidebar() {
   const user = useAuthStore((state) => state.user);
   const [unreadCount, setUnreadCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function loadUnreadCount() {
@@ -62,9 +64,7 @@ export default function Sidebar() {
 
     socket.emit("register", user.user_id);
 
-    function handleNotification(data) {
-      console.log(data);
-
+    function handleNotification() {
       setUnreadCount((prev) => prev + 1);
     }
 
@@ -93,31 +93,24 @@ export default function Sidebar() {
   const avatarInitial = fullName[0]?.toUpperCase() || "U";
 
   const navClassName = ({ isActive }) =>
-    `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${
+    `flex items-center gap-4 rounded-2xl px-5 py-4 text-[15px] font-semibold transition ${
       isActive
         ? "bg-indigo-50 text-indigo-700"
         : "text-slate-700 hover:bg-slate-50 hover:text-slate-950"
     }`;
 
   return (
-    <aside className="hidden w-[262px] shrink-0 border-r border-black/[0.06] bg-white lg:block h-screen">
-      <div className="flex flex-col h-full">
-        <div className="flex h-[68px] items-center gap-3 border-b border-black/[0.06] px-6 shrink-0">
-          <div className="grid h-9 w-9 place-items-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-200">
-            <Icon name="board" />
-          </div>
-          <p className="text-sm font-bold text-slate-950">InterTrack</p>
-        </div>
-
-        <nav className="flex flex-1 flex-col gap-2 px-4 py-7">
+    <aside className="hidden h-full w-[262px] shrink-0 border-r border-black/[0.06] bg-white lg:block">
+      <div className="flex h-full flex-col">
+        <nav className="flex flex-1 flex-col gap-3 px-5 pt-3">
           <NavLink to="/dashboard" className={navClassName}>
-            <Icon name="dashboard" className="h-4 w-4 text-slate-400" />
-            Dashboard
+            <Icon name="dashboard" className="h-5 w-5 text-slate-500" />
+            {t('sidebar.dashboard')}
           </NavLink>
 
           <NavLink to="/application" className={navClassName}>
-            <Icon name="board" className="h-4 w-4" />
-            My Applications
+            <Icon name="board" className="h-5 w-5" />
+            {t('sidebar.myApplications')}
           </NavLink>
 
           <button
@@ -125,8 +118,8 @@ export default function Sidebar() {
             onClick={openQuickAdd}
             className="mt-4 inline-flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
           >
-            <Icon name="plus" className="h-4 w-4" />
-            Quick Add Job
+            <Icon name="plus" className="h-5 w-5" />
+            {t('sidebar.quickAddJob')}
           </button>
         </nav>
 
@@ -135,11 +128,11 @@ export default function Sidebar() {
             <button
               type="button"
               onClick={() => setShowNotifications(!showNotifications)}
-              className="flex items-center justify-between w-full py-2 transition hover:text-slate-950"
+              className="flex items-center justify-between w-full py-2 text-base transition hover:text-slate-950"
             >
               <div className="flex items-center gap-3">
-                <Icon name="bell" className="h-4 w-4 text-slate-400" />
-                Notifications
+                <Icon name="bell" className="h-5 w-5 text-slate-500" />
+                {t('sidebar.notifications')}
               </div>
 
               {unreadCount > 0 && (
@@ -157,10 +150,10 @@ export default function Sidebar() {
           <button
             type="button"
             onClick={handleSignOut}
-            className="mt-3 flex items-center gap-3 py-2 transition hover:text-slate-950"
+            className="mt-3 flex items-center gap-3 py-2 text-base transition hover:text-slate-950"
           >
-            <Icon name="logout" className="h-4 w-4 text-slate-400" />
-            Sign out
+            <Icon name="logout" className="h-5 w-5 text-slate-500" />
+            {t('sidebar.signOut')}
           </button>
 
           <div className="mt-6 flex items-center gap-3">
@@ -168,7 +161,7 @@ export default function Sidebar() {
               {avatarInitial}
             </div>
             <div>
-              <p className="text-xs font-semibold text-slate-950">{fullName}</p>
+              <p className="text-sm font-semibold text-slate-950">{fullName}</p>
               <p className="text-xs text-slate-400">{email}</p>
             </div>
           </div>

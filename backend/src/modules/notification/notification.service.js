@@ -1,13 +1,11 @@
 import prisma from '../../config/prisma.js'
 
-const createNotification = async({application_id, user_id, title, type, message}) => {
+const createNotification = async({application_id, user_id, type}) => {
     return prisma.notification.create({
         data: {
             application_id, 
             user_id, 
-            title, 
-            type, 
-            message
+            type
         }
     })
 }
@@ -27,10 +25,15 @@ const getNotificationsService = async(user_id) => {
             notification_id: true,
             type: true,
             application_id: true,
-            title: true,
-            message: true,
             is_read: true,
-            created_at: true
+            created_at: true,
+
+            application: {
+                select: {
+                    company_name: true,
+                    position: true
+                }
+            }
         }
     })
 

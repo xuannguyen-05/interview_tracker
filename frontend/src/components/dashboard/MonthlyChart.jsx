@@ -1,6 +1,9 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import { useTranslation } from "react-i18next"
 
 export default function MonthlyChart({ data }) {
+  const { t } = useTranslation()
+
   const chartData = data?.map((d) => ({
     month: `M${d.month}`,
     count: d.count,
@@ -8,11 +11,15 @@ export default function MonthlyChart({ data }) {
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
-      const data = payload[0].payload
+      const item = payload[0].payload
       return (
         <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-lg">
-          <p className="text-sm font-medium text-slate-900">Month {data.month.replace('M', '')}</p>
-          <p className="text-sm text-slate-600">{data.count} applications</p>
+          <p className="text-sm font-medium text-slate-900">
+            {t("dashboard.monthlyApplications.tooltipMonth", { month: item.month.replace("M", "") })}
+          </p>
+          <p className="text-sm text-slate-600">
+            {item.count} {t("dashboard.monthlyApplications.applications")}
+          </p>
         </div>
       )
     }
@@ -21,8 +28,8 @@ export default function MonthlyChart({ data }) {
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h4 className="text-lg font-semibold">Monthly Applications</h4>
-      <p className="text-sm text-slate-400">Application trends over the year</p>
+      <h4 className="text-lg font-semibold">{t("dashboard.monthlyApplications.title")}</h4>
+      <p className="text-sm text-slate-400">{t("dashboard.monthlyApplications.subtitle")}</p>
 
       <div className="mt-6 h-72">
         <ResponsiveContainer width="100%" height="100%">

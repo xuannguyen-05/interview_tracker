@@ -5,6 +5,7 @@ import prisma from '../../config/prisma.js'
 import AppError from '../../utils/AppError.js'
 import { sendMail } from '../../services/mail.service.js';
 import { resetPasswordTemplate } from '../../templates/resetPassword.template.js';
+import {OAuth2Client} from "google-auth-library"
 
 const registerService = async(data) => {
     const {full_name, email, password} = data
@@ -81,7 +82,7 @@ const forgotPasswordService = async(email) => {
         }
     })
 
-    if(!email){
+    if(!user){
         return
     }
 
@@ -127,7 +128,7 @@ const resetPasswordService = async(token, password) => {
     });
 
     if (!user) {
-        throw new AppError("Invalid or expired reset token.", 400, INVALID_RESET_TOKEN);
+        throw new AppError("Invalid or expired reset token.", 400, "INVALID_RESET_TOKEN");
     }
 
     if (user.reset_password_expires < new Date()) {
@@ -153,9 +154,104 @@ const resetPasswordService = async(token, password) => {
     });
 }
 
+
+const googleClient = new OAuth2Client(
+    process.env.GOOGLE_CLIENT_ID
+);
+
+const googleLoginService = async (credential) => {
+    // verify Google credential
+    const ticket = await googleClient.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID
+    })
+
+    const payload = ticket.getPayload();
+
+    if (!payload.email_verified) {
+        throw new AppError(
+            "Google email is not verified",
+            401,
+            "GOOGLE_EMAIL_NOT_VERIFIED"
+        )
+    }
+
+    const google_id = payload.sub;
+    const email = payload.email;
+    const full_name = payload.name;
+
+    // tìm user
+    const userSelect = {
+        user_id: true,
+        full_name: true,
+        email: true
+    }
+
+    let user = await prisma.user.findUnique({
+        where: {
+            google_id
+        },
+        select: userSelect
+    })
+
+    if(!user){
+
+        user = await prisma.user.findUnique({
+            where: {
+                email
+            },
+            select: userSelect
+        });
+        
+        // Có account email/password rồi
+        // → link Google vào account đó
+        if(user){
+            user = await prisma.user.update({
+                where: {
+                    user_id: user.user_id
+                },
+                data: {
+                    google_id
+                },
+                select: userSelect
+            })
+        }else{
+            // Không có account nào
+            // → tạo user mới
+            user = await prisma.user.create({
+                data: {
+                    full_name,
+                    email,
+                    google_id,
+                    password_hash: null
+                },
+                select: userSelect
+            })
+        }
+    }
+    // tạo JWT
+    const accessToken = jwt.sign(
+        {
+            user_id: user.user_id
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN }
+    )
+
+    return {
+        user: {
+            user_id: user.user_id,
+            full_name: user.full_name,
+            email: user.email
+        },
+        accessToken
+    }
+}
+
 export {
     registerService,
     loginService,
     forgotPasswordService,
-    resetPasswordService
+    resetPasswordService,
+    googleLoginService
 }

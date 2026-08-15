@@ -2,6 +2,8 @@ import { ApplicationStatus } from '@prisma/client'
 import prisma from '../../config/prisma.js'
 import AppError from '../../utils/AppError.js'
 import notify from '../notification/notification.helper.js'
+import uploadToCloudinary from '../../utils/upload.js'
+import cloudinary from '../../config/cloudinary.js'
 
 const findApplicationHelper = async (application_id, user_id) => {
     if (Number.isNaN(application_id)) {
@@ -88,7 +90,19 @@ const getApplicationByIdService = async(application_id, user_id) => {
     return findApplicationHelper(application_id, user_id)
 }
 
-const createApplicationService = async(user_id, data) => {
+const createApplicationService = async(user_id, data, file) => {
+
+    let resume_url = null;
+    let resume_public_id = null;
+
+    if (file) {
+        const result = await uploadToCloudinary(file);
+
+        resume_url = result.secure_url;
+        resume_public_id = result.public_id;
+    }
+
+
     const application = await prisma.application.create({
         data: {
             user_id,
@@ -97,16 +111,17 @@ const createApplicationService = async(user_id, data) => {
             apply_date: data.apply_date,
             job_url: data.job_url ?? null,
             notes: data.notes ?? null,
-
+            resume_url,
+            resume_public_id
         }
     })
 
     return application
 }
 
-const updateApplicationService = async(application_id, user_id, data) => {
+const updateApplicationService = async(application_id, user_id, data, file) => {
 
-    await findApplicationHelper(application_id, user_id)
+    const application = await findApplicationHelper(application_id, user_id)
 
     const allowedFields = ["company_name", "position", "apply_date", "job_url", "notes"]
     const updateData = {}
@@ -117,7 +132,19 @@ const updateApplicationService = async(application_id, user_id, data) => {
         }
     }
 
-    const application = await prisma.application.update({
+    if(file){
+        if(application.resume_public_id){
+            await cloudinary.uploader.destroy(application.resume_public_id)
+        }
+
+        const result = await uploadToCloudinary(file);
+
+        updateData.resume_url = result.secure_url
+        updateData.resume_public_id = result.public_id
+        
+    }
+
+    const updateApplication = await prisma.application.update({
         where: {
             application_id
         },
@@ -125,12 +152,16 @@ const updateApplicationService = async(application_id, user_id, data) => {
         data: updateData
     })
 
-    return application
+    return updateApplication
 }
 
 const deleteApplicationService = async(application_id, user_id) => {
 
-    await findApplicationHelper(application_id, user_id)
+    const application = await findApplicationHelper(application_id, user_id)
+
+    if (application.resume_public_id) {
+        await cloudinary.uploader.destroy(application.resume_public_id);
+    }
 
     await prisma.application.update({
         where: {
@@ -182,10 +213,7 @@ const updateStatusApplicationService = async(application_id, user_id, data) => {
             await notify({
                 application_id,
                 user_id,
-                type: data.status,
-                data: {
-                    company_name: existApplication.company_name
-                }
+                type: data.status
             });
             break;
     }

@@ -38,7 +38,7 @@ const createApplication = asyncHandler(async(req, res) => {
     
     const user_id = req.user.user_id
 
-    const created = await createApplicationService(user_id, req.body)
+    const created = await createApplicationService(user_id, req.body, req.file)
 
     res.status(201).json({
         message: "Create application success",
@@ -54,7 +54,7 @@ const updateApplication = asyncHandler(async(req, res) => {
 
     const user_id = req.user.user_id
 
-    const updated = await updateApplicationService(application_id, user_id, req.body)
+    const updated = await updateApplicationService(application_id, user_id, req.body, req.file)
 
     res.status(200).json({
         message: "Update application success",
@@ -91,11 +91,12 @@ const updateStatusApplication = asyncHandler(async(req, res) => {
 
 })
 
+
 export {
     getApplications,
     getApplicationById,
     createApplication,
     updateApplication,
     deleteApplication,
-    updateStatusApplication
+    updateStatusApplication,
 }

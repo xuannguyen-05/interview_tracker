@@ -12,6 +12,17 @@ export async function loginApi(payload) {
   }
 }
 
+export async function googleLoginApi(payload) {
+  try {
+    const response = await http.post("/auth/google", payload)
+    toastService.showByModule("auth", "google", "success")
+    return response.data
+  } catch (error) {
+    toastService.showByModule("auth", "google", "error")
+    throw error
+  }
+}
+
 export async function registerApi(payload) {
   try {
     const response = await http.post("/auth/register", payload)

@@ -1,6 +1,7 @@
 import toast from "react-hot-toast"
 import { getToastMessage } from "@/constants/toastMessages"
 import { getToastConfig } from "@/services/toastConfig"
+import i18n from "@/i18n"
 
 /**
  * Centralized toast service
@@ -91,9 +92,9 @@ class ToastService {
    */
   promise(promise, messages = {}, options = {}) {
     const {
-      loading = "Loading...",
-      success = "Success!",
-      error = "Something went wrong",
+      loading = i18n.t("toast.general.loading"),
+      success = i18n.t("toast.general.success"),
+      error = i18n.t("toast.general.error"),
     } = messages
 
     return toast.promise(promise, {

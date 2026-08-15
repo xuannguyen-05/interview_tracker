@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import AuthShell from "@/components/auth/AuthShell";
 import { registerApi } from "@/services/authService";
@@ -11,6 +12,7 @@ import ReactGA from "@/lib/analytics";
 export default function RegisterPage() {
   const navigate = useNavigate();
   const setAccessToken = useAuthStore((state) => state.setAccessToken);
+  const { t } = useTranslation();
 
   const [form, setForm] = useState({
     fullName: "",
@@ -42,7 +44,7 @@ export default function RegisterPage() {
     event.preventDefault();
 
     if (!form.fullName.trim() || !form.email.trim() || !form.password.trim()) {
-      setError("Please enter your full name, email and password.");
+      setError(t('auth.register.errors.emptyFields'));
       return;
     }
 
@@ -70,7 +72,7 @@ export default function RegisterPage() {
       setError(
         getErrorMessage(
           requestError,
-          "Could not create account. Please try again.",
+          t('auth.register.errors.createFailed'),
         ),
       );
     } finally {
@@ -80,11 +82,11 @@ export default function RegisterPage() {
 
   return (
     <AuthShell
-      eyebrow="Interview Tracker"
-      title="Create new account"
-      description="Start managing your internship with a clear and scalable workspace."
-      footerText="Already have an account?"
-      footerLinkLabel="Log in"
+      eyebrow={t('common.interviewTracker')}
+      title={t('auth.register.title')}
+      description={t('auth.register.description')}
+      footerText={t('auth.register.hasAccount')}
+      footerLinkLabel={t('auth.register.login')}
       footerLinkTo="/login"
     >
       <form className="space-y-4" onSubmit={handleSubmit}>
@@ -99,7 +101,7 @@ export default function RegisterPage() {
             htmlFor="register-full-name"
             className="text-sm font-medium text-slate-700 mb-2"
           >
-            Full Name
+            {t('common.fullName')}
           </label>
           <input
             id="register-full-name"
@@ -108,7 +110,7 @@ export default function RegisterPage() {
             autoComplete="name"
             value={form.fullName}
             onChange={handleChange}
-            placeholder="Nguyen Van A"
+            placeholder={t('auth.register.fullNamePlaceholder')}
             className={inputClassName}
           />
         </div>
@@ -118,7 +120,7 @@ export default function RegisterPage() {
             htmlFor="register-email"
             className="text-sm font-medium text-slate-700"
           >
-            Email
+            {t('common.email')}
           </label>
           <input
             id="register-email"
@@ -127,7 +129,7 @@ export default function RegisterPage() {
             autoComplete="email"
             value={form.email}
             onChange={handleChange}
-            placeholder="you@university.edu"
+            placeholder={t('auth.register.emailPlaceholder')}
             className={inputClassName}
           />
         </div>
@@ -137,7 +139,7 @@ export default function RegisterPage() {
             htmlFor="register-password"
             className="text-sm font-medium text-slate-700"
           >
-            Password
+            {t('common.password')}
           </label>
           <input
             id="register-password"
@@ -146,7 +148,7 @@ export default function RegisterPage() {
             autoComplete="new-password"
             value={form.password}
             onChange={handleChange}
-            placeholder="••••••••"
+            placeholder={t('auth.register.passwordPlaceholder')}
             className={inputClassName}
           />
         </div>
@@ -156,7 +158,7 @@ export default function RegisterPage() {
           disabled={isSubmitting}
           className={submitClassName}
         >
-          {isSubmitting ? "Creating account..." : "Create account"}
+          {isSubmitting ? t('auth.register.submitting') : t('auth.register.submit')}
         </button>
       </form>
     </AuthShell>

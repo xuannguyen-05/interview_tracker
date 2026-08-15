@@ -1,113 +1,82 @@
-// Toast messages organized by module
+import i18n from '@/i18n';
+
 export const TOAST_MESSAGES = {
-  // Auth Module
   auth: {
     login: {
-      success: {
-        message: "Login successful!",
-        type: "success",
-      },
+      success: { messageKey: 'toast.auth.login.success', type: 'success' },
+      error: { messageKey: 'toast.auth.login.error', type: 'error' },
     },
-
     logout: {
-      success: {
-        message: "Logged out successfully",
-        type: "success",
-      },
+      success: { messageKey: 'toast.auth.logout.success', type: 'success' },
+      error: { messageKey: 'toast.auth.logout.error', type: 'error' },
     },
-
     register: {
-      success: {
-        message: "Account created successfully!",
-        type: "success",
-      },
+      success: { messageKey: 'toast.auth.register.success', type: 'success' },
+      error: { messageKey: 'toast.auth.register.error', type: 'error' },
     },
-
+    google: {
+      success: { messageKey: 'toast.auth.google.success', type: 'success' },
+      error: { messageKey: 'toast.auth.google.error', type: 'error' },
+    },
     forgotPassword: {
-      success: {
-        message: "Password reset link sent to your email",
-        type: "success",
-      },
+      success: { messageKey: 'toast.auth.forgotPassword.success', type: 'success' },
+      error: { messageKey: 'toast.auth.forgotPassword.error', type: 'error' },
     },
-
     resetPassword: {
-      success: {
-        message: "Password reset successfully! Please login with your new password",
-        type: "success",
-      },
+      success: { messageKey: 'toast.auth.resetPassword.success', type: 'success' },
+      error: { messageKey: 'toast.auth.resetPassword.error', type: 'error' },
     },
   },
 
-  // Application Module
   application: {
     create: {
-      success: {
-        message: "Application created successfully!",
-        type: "success",
-      },
+      success: { messageKey: 'toast.application.create.success', type: 'success' },
+      error: { messageKey: 'toast.application.create.error', type: 'error' },
     },
     update: {
-      success: {
-        message: "Application updated successfully!",
-        type: "success",
-      },
+      success: { messageKey: 'toast.application.update.success', type: 'success' },
+      error: { messageKey: 'toast.application.update.error', type: 'error' },
     },
     delete: {
-      success: {
-        message: "Application deleted successfully!",
-        type: "success",
-      },
-      confirm: {
-        message: "Are you sure you want to delete this application?",
-        type: "confirm",
-      },
+      success: { messageKey: 'toast.application.delete.success', type: 'success' },
+      error: { messageKey: 'toast.application.delete.error', type: 'error' },
+      confirm: { messageKey: 'toast.application.delete.confirm', type: 'confirm' },
     },
     updateStatus: {
-      success: {
-        message: "Status updated successfully!",
-        type: "success",
-      },
+      success: { messageKey: 'toast.application.updateStatus.success', type: 'success' },
+      error: { messageKey: 'toast.application.updateStatus.error', type: 'error' },
     },
   },
 
-  // Notification Module
   notification: {
     markAsRead: {
-      success: {
-        message: "Notification marked as read",
-        type: "success",
-      },
+      success: { messageKey: 'toast.notification.markAsRead.success', type: 'success' },
+      error: { messageKey: 'toast.notification.markAsRead.error', type: 'error' },
     },
     markAllAsRead: {
-      success: {
-        message: "All notifications marked as read",
-        type: "success",
-      },
+      success: { messageKey: 'toast.notification.markAllAsRead.success', type: 'success' },
+      error: { messageKey: 'toast.notification.markAllAsRead.error', type: 'error' },
     },
   },
 
-  // General
   general: {
-    error: {
-      message: "Something went wrong. Please try again.",
-      type: "error",
-    },
-    success: {
-      message: "Operation completed successfully!",
-      type: "success",
-    },
-    loading: {
-      message: "Loading...",
-      type: "loading",
-    },
+    error: { messageKey: 'toast.general.error', type: 'error' },
+    success: { messageKey: 'toast.general.success', type: 'success' },
+    loading: { messageKey: 'toast.general.loading', type: 'loading' },
   },
 };
 
-// Helper function to get toast message
-export function getToastMessage(module, action, result = "success") {
+export function getToastMessage(module, action, result = 'success') {
   try {
-    return TOAST_MESSAGES[module][action][result];
-  } catch (error) {
-    return TOAST_MESSAGES.general.error;
+    const entry = TOAST_MESSAGES[module]?.[action]?.[result] ?? TOAST_MESSAGES.general.error;
+    return {
+      ...entry,
+      message: i18n.t(entry.messageKey),
+    };
+  } catch {
+    return {
+      ...TOAST_MESSAGES.general.error,
+      message: i18n.t(TOAST_MESSAGES.general.error.messageKey),
+    };
   }
 }

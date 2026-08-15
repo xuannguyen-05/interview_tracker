@@ -75,3 +75,28 @@ select {
 	-webkit-box-orient: vertical;
 	overflow: hidden;
 }
+
+@keyframes cardHighlight {
+  0% {
+    transform: scale(1);
+    background: white;
+  }
+
+  25% {
+    transform: scale(1.02);
+    background: rgb(238 242 255);
+  }
+
+  50% {
+    transform: scale(0.995);
+  }
+
+  75% {
+    transform: scale(1.01);
+  }
+
+  100% {
+    transform: scale(1);
+    background: rgb(238 242 255);
+  }
+}

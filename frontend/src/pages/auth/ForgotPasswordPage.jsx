@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import AuthShell from "@/components/auth/AuthShell";
 import { forgotPasswordApi } from "@/services/authService";
@@ -7,6 +8,7 @@ import { getErrorMessage } from "@/utils/getErrorMessage";
 
 export default function ForgotPasswordPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [form, setForm] = useState({
     email: "",
@@ -37,7 +39,7 @@ export default function ForgotPasswordPage() {
     event.preventDefault();
 
     if (!form.email.trim()) {
-      setError("Please enter your email.");
+      setError(t('auth.forgotPassword.errors.emptyEmail'));
       return;
     }
 
@@ -51,7 +53,7 @@ export default function ForgotPasswordPage() {
 
       setIsSuccess(true);
     } catch (requestError) {
-      setError(getErrorMessage(requestError, "Failed to send reset link. Please try again."));
+      setError(getErrorMessage(requestError, t('auth.forgotPassword.errors.sendFailed')));
     } finally {
       setIsSubmitting(false);
     }
@@ -60,11 +62,11 @@ export default function ForgotPasswordPage() {
   if (isSuccess) {
     return (
       <AuthShell
-        eyebrow="Interview Tracker"
-        title="Check your email"
-        description="We've sent a password reset link to your email. Please check your inbox and follow the instructions."
-        footerText="Remember your password?"
-        footerLinkLabel="Back to login"
+        eyebrow={t('common.interviewTracker')}
+        title={t('auth.forgotPassword.success.title')}
+        description={t('auth.forgotPassword.success.description')}
+        footerText={t('auth.forgotPassword.rememberPassword')}
+        footerLinkLabel={t('auth.forgotPassword.backToLogin')}
         footerLinkTo="/login"
       >
         <div className="flex flex-col items-center justify-center py-8">
@@ -84,7 +86,7 @@ export default function ForgotPasswordPage() {
             </svg>
           </div>
           <p className="text-center text-sm text-slate-600">
-            The link will expire in 15 minutes.
+            {t('auth.forgotPassword.success.expires')}
           </p>
         </div>
       </AuthShell>
@@ -93,11 +95,11 @@ export default function ForgotPasswordPage() {
 
   return (
     <AuthShell
-      eyebrow="Interview Tracker"
-      title="Reset your password"
-      description="Enter your email address and we'll send you a link to reset your password."
-      footerText="Remember your password?"
-      footerLinkLabel="Back to login"
+      eyebrow={t('common.interviewTracker')}
+      title={t('auth.forgotPassword.title')}
+      description={t('auth.forgotPassword.description')}
+      footerText={t('auth.forgotPassword.rememberPassword')}
+      footerLinkLabel={t('auth.forgotPassword.backToLogin')}
       footerLinkTo="/login"
     >
       <form className="space-y-4" onSubmit={handleSubmit}>
@@ -112,7 +114,7 @@ export default function ForgotPasswordPage() {
             htmlFor="forgot-email"
             className="text-sm font-medium text-slate-700"
           >
-            Email
+            {t('common.email')}
           </label>
           <input
             id="forgot-email"
@@ -121,7 +123,7 @@ export default function ForgotPasswordPage() {
             autoComplete="email"
             value={form.email}
             onChange={handleChange}
-            placeholder="you@university.edu"
+            placeholder={t('auth.forgotPassword.emailPlaceholder')}
             className={inputClassName}
           />
         </div>
@@ -131,7 +133,7 @@ export default function ForgotPasswordPage() {
           disabled={isSubmitting}
           className={submitClassName}
         >
-          {isSubmitting ? "Sending..." : "Send reset link"}
+          {isSubmitting ? t('auth.forgotPassword.submitting') : t('auth.forgotPassword.submit')}
         </button>
       </form>
     </AuthShell>

@@ -64,6 +64,7 @@ function CardIcon({ name, className = "h-4 w-4" }) {
     trash: "M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15",
     warning: "M12 9v4M12 17h.01M10.3 3.9 1.1 1.9a2 2 0 0 0-1.1 0L1.7 20a2 2 0 0 0 1.7 3h17.2a2 2 0 0 0 1.7-3L13.7 5.8a2 2 0 0 0-3.4 0Z",
     external: "M14 3h7v7M10 14 21 3M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5",
+    resume: "M14 2H6a2 2 0 0 0-2 2v16l4-3h10a2 2 0 0 0 2-2V8l-6-6Z M14 2v6h6 M10 12h4",
   }
 
   return (
@@ -104,23 +105,27 @@ const INITIAL_COLORS = [
   "bg-pink-100 text-pink-700",
 ]
 
-export default function ApplicationCard({ application, onEdit, onDelete, draggableProps = {} }) {
+export default function ApplicationCard({ application, onEdit, onDelete, draggableProps = {}, isHighlighted = false }) {
   const status = application.status ?? "APPLIED"
   const daysAgo = daysSince(application.apply_date)
   const needsFollowUp = status === "APPLIED" && daysAgo >= 7
   const isLate = status === "APPLIED" && daysAgo >= 10
-  const initial = application.company_name?.[0]?.toUpperCase() ?? "?"
+  const initial = application.company_name?.[0]?.toUpperCase() || "?"
   const colorIndex = initial.charCodeAt(0) % INITIAL_COLORS.length
   const borderClass = isLate
     ? "border-red-300 bg-red-50/30"
     : needsFollowUp
       ? "border-amber-300 bg-amber-50/30"
       : "border-black/[0.08] bg-white"
+  
+  const highlightClass = isHighlighted
+  ? "border-indigo-400 ring-2 ring-indigo-200 shadow-lg animate-[cardHighlight_800ms_cubic-bezier(.2,.8,.2,1)]"
+  : "";
 
   return (
     <div
       {...draggableProps}
-      className={`group cursor-grab select-none rounded-xl border p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:cursor-grabbing ${borderClass}`}
+      className={`group cursor-grab select-none rounded-xl border p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:cursor-grabbing ${borderClass} ${highlightClass}`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex items-start gap-3">
@@ -165,6 +170,19 @@ export default function ApplicationCard({ application, onEdit, onDelete, draggab
         </div>
 
         <div className="flex items-center gap-2">
+          {application.resume_url ? (
+            <a
+              href={application.resume_url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 rounded-lg bg-indigo-50 px-2 py-1 text-[11px] font-semibold text-indigo-600 transition hover:bg-indigo-100"
+              aria-label="View resume"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <CardIcon name="resume" className="h-3 w-3" />
+              CV
+            </a>
+          ) : null}
           {application.job_url ? (
             <a
               href={application.job_url}
