@@ -11,7 +11,6 @@ import ReactGA from "@/lib/analytics";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const setAccessToken = useAuthStore((state) => state.setAccessToken);
   const { t } = useTranslation();
 
   const [form, setForm] = useState({

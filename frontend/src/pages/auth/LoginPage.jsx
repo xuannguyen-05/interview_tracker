@@ -11,7 +11,6 @@ import ReactGA from "@/lib/analytics";
 
 const GOOGLE_SCRIPT_ID = "google-identity-services";
 
-let googleInitialized = false;
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -62,8 +61,6 @@ export default function LoginPage() {
           logo_alignment: "left",
         });
       }
-
-      setIsGoogleReady(true);
     };
 
     const existingScript = document.getElementById(GOOGLE_SCRIPT_ID);

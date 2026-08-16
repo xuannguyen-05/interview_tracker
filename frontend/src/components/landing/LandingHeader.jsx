@@ -2,17 +2,15 @@ import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 
 import LanguageSwitcher from "@/components/common/LanguageSwitcher"
-import logo from "@/assets/job-interview.png"
+
+import Brand from "@/components/common/Brand"
 
 export default function LandingHeader() {
   const { t } = useTranslation()
   return (
     <header className="sticky top-0 z-50 border-b border-black/[0.06] bg-white/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link to="/" className="flex items-center gap-2.5">
-          <img src={logo} alt="Interview Tracker" className="h-9 w-9" />
-          <span className="text-sm font-bold text-slate-950 sm:text-base">{t('common.interviewTracker')}</span>
-        </Link>
+        <Brand />
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
           <a href="#features" className="transition hover:text-slate-950">{t('landing.header.features')}</a>

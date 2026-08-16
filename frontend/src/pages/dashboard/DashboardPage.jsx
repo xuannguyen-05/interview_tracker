@@ -46,9 +46,6 @@ export default function DashboardPage() {
   const location = useLocation()
   const { t } = useTranslation()
 
-  const clearAccessToken = useAuthStore(
-    (state) => state.clearAccessToken
-  )
 
   const [data, setData] = useState(null)
   const [monthly, setMonthly] = useState([])

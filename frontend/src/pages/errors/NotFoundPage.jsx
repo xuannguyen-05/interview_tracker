@@ -2,10 +2,9 @@ import StatusShell from "@/components/errors/StatusShell"
 import { useAuthStore } from "@/stores/useAuthStore"
 
 export default function NotFoundPage() {
-  const accessToken = useAuthStore((state) => state.accessToken)
+  const user = useAuthStore((state) => state.user)
 
-  // Nếu đã đăng nhập thì cho quay về dashboard, còn chưa đăng nhập thì về login.
-  const backTo = accessToken ? "/dashboard" : "/login"
+  const backTo = user ? "/dashboard" : "/login"
 
   return (
     <StatusShell

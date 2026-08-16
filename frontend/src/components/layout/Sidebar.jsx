@@ -10,6 +10,8 @@ import { useTranslation } from "react-i18next";
 
 import { socket } from "@/socket/socket";
 
+import http from "@/services/http";
+
 function Icon({ name, className = "h-4 w-4" }) {
   const paths = {
     board: "M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z",
@@ -39,7 +41,6 @@ function Icon({ name, className = "h-4 w-4" }) {
 
 export default function Sidebar() {
   const navigate = useNavigate();
-  const clearAccessToken = useAuthStore((state) => state.clearAccessToken);
   const user = useAuthStore((state) => state.user);
   const [unreadCount, setUnreadCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -71,7 +72,6 @@ export default function Sidebar() {
     }
 
     const handleNotification = (notification) => {
-
       setUnreadCount((prev) => prev + 1);
     };
 
@@ -86,12 +86,17 @@ export default function Sidebar() {
     window.dispatchEvent(new CustomEvent("quickAdd"));
   }
 
-  function handleSignOut() {
-    socket.disconnect();
+  async function handleSignOut() {
+    try {
+      socket.disconnect();
 
-    clearAccessToken();
-    toastService.showByModule("auth", "logout", "success");
-    navigate("/login", { replace: true });
+      await http.post("/auth/logout");
+
+      toastService.showByModule("auth", "logout", "success");
+      navigate("/login", { replace: true });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   }
 
   const fullName = user?.full_name?.trim() || "User";

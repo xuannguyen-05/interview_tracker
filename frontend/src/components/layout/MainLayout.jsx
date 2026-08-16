@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next"
 import Sidebar from "./Sidebar"
 import LanguageSwitcher from "@/components/common/LanguageSwitcher"
 
-import logo from "@/assets/job-interview.png"
+import Brand from "@/components/common/Brand"
 
 function TypingTitle({ text }) {
   const [displayText, setDisplayText] = useState("")
@@ -53,10 +53,7 @@ export default function MainLayout({ children }) {
         <header className="sticky top-0 z-20 border-b border-black/[0.06] bg-white/90 backdrop-blur-sm">
           <div className="flex h-[68px] items-center justify-between gap-4 px-5 lg:px-6">
             <div className="flex min-w-0 items-center">
-              <div className="flex items-center gap-3">
-                <img src={logo} alt="Interview Tracker" className="h-11 w-11 shrink-0" />
-                <span className="truncate text-xl font-bold tracking-tight text-slate-950">{t("common.interviewTracker")}</span>
-              </div>
+              <Brand />
 
               {pageTitle ? (
                 <div className="ml-10 min-w-0 truncate md:ml-12">
