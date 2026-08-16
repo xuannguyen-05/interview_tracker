@@ -62,17 +62,23 @@ export default function Sidebar() {
 
     socket.connect();
 
-    socket.emit("register", user.user_id);
-
-    function handleNotification() {
-      setUnreadCount((prev) => prev + 1);
+    if (socket.connected) {
+      socket.emit("register", user.user_id);
+    } else {
+      socket.once("connect", () => {
+        socket.emit("register", user.user_id);
+      });
     }
+
+    const handleNotification = (notification) => {
+
+      setUnreadCount((prev) => prev + 1);
+    };
 
     socket.on("notification:new", handleNotification);
 
     return () => {
       socket.off("notification:new", handleNotification);
-      socket.disconnect();
     };
   }, [user]);
 
@@ -81,12 +87,12 @@ export default function Sidebar() {
   }
 
   function handleSignOut() {
-  socket.disconnect();
+    socket.disconnect();
 
-  clearAccessToken();
-  toastService.showByModule("auth", "logout", "success");
-  navigate("/login", { replace: true });
-}
+    clearAccessToken();
+    toastService.showByModule("auth", "logout", "success");
+    navigate("/login", { replace: true });
+  }
 
   const fullName = user?.full_name?.trim() || "User";
   const email = user?.email?.trim() || "No email";
@@ -105,12 +111,12 @@ export default function Sidebar() {
         <nav className="flex flex-1 flex-col gap-3 px-5 pt-3">
           <NavLink to="/dashboard" className={navClassName}>
             <Icon name="dashboard" className="h-5 w-5 text-slate-500" />
-            {t('sidebar.dashboard')}
+            {t("sidebar.dashboard")}
           </NavLink>
 
           <NavLink to="/application" className={navClassName}>
             <Icon name="board" className="h-5 w-5" />
-            {t('sidebar.myApplications')}
+            {t("sidebar.myApplications")}
           </NavLink>
 
           <button
@@ -119,7 +125,7 @@ export default function Sidebar() {
             className="mt-4 inline-flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
           >
             <Icon name="plus" className="h-5 w-5" />
-            {t('sidebar.quickAddJob')}
+            {t("sidebar.quickAddJob")}
           </button>
         </nav>
 
@@ -132,7 +138,7 @@ export default function Sidebar() {
             >
               <div className="flex items-center gap-3">
                 <Icon name="bell" className="h-5 w-5 text-slate-500" />
-                {t('sidebar.notifications')}
+                {t("sidebar.notifications")}
               </div>
 
               {unreadCount > 0 && (
@@ -153,7 +159,7 @@ export default function Sidebar() {
             className="mt-3 flex items-center gap-3 py-2 text-base transition hover:text-slate-950"
           >
             <Icon name="logout" className="h-5 w-5 text-slate-500" />
-            {t('sidebar.signOut')}
+            {t("sidebar.signOut")}
           </button>
 
           <div className="mt-6 flex items-center gap-3">

@@ -25,13 +25,10 @@ const login = asyncHandler(async(req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 ngày
     })
 
-
-    // Trả về user và accessToken trong body để frontend JS có thể lấy token khi cần.
     res.status(200).json({
         message: "Login success",
         data: {
-            user,
-            accessToken
+            user
         }
     })
 })
@@ -41,7 +38,7 @@ const logout = (req, res) => {
     res.clearCookie("accessToken", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax"
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
     })
 
     res.status(200).json({
@@ -74,11 +71,22 @@ const resetPassword = asyncHandler(async (req, res) => {
 const googleLogin = asyncHandler(async (req, res) => {
     const { credential } = req.body
 
-    const result = await googleLoginService(credential)
+    const { user, accessToken } = await googleLoginService(credential)
+
+    const isProduction = process.env.NODE_ENV === "production";
+
+    res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    })
 
     res.status(200).json({
         message: "Google login success",
-        data: result
+        data: {
+            user
+        }
     })
 })
 

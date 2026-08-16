@@ -304,7 +304,7 @@
     "funnelSubtitle": "Applications by stage",
     "funnelTooltip": {
       "applications": "applications",
-      "conversion": "conversion"
+      "conversion": "conversion from previous stage"
     },
     "monthlyTrends": "Monthly Trends",
     "monthlyApplications": {

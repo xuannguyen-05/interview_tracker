@@ -90,9 +90,26 @@ const getApplicationStats  = async(user_id) => {
         grouped.map(item => [item.status, item._count.status])
     )
 
+    // Dữ liệu lũy kế dành riêng cho Funnel
+    const funnelCounts = {
+        applied:
+            (counts.APPLIED ?? 0) +
+            (counts.INTERVIEW ?? 0) +
+            (counts.OFFER ?? 0) +
+            (counts.REJECTED ?? 0),
+
+        interview:
+            (counts.INTERVIEW ?? 0) +
+            (counts.OFFER ?? 0),
+
+        offer:
+            counts.OFFER ?? 0
+    }
+
     return {
         total_applications, 
-        counts
+        counts,
+        funnelCounts
     }
 }
 
@@ -129,25 +146,22 @@ const buildSummary = ({total_applications, counts}) => {
     }
 }
 
-const buildFunnel = ({total_applications, counts}) => {
+const buildFunnel = ({ funnelCounts }) => {
 
-    const interview = counts.INTERVIEW ?? 0
-    const offer = counts.OFFER ?? 0
+    const interview_rate =
+        funnelCounts.applied
+            ? (funnelCounts.interview / funnelCounts.applied) * 100
+            : 0
 
-    const interview_rate = total_applications 
-        ? interview / total_applications * 100 
-        : 0
-
-    const offer_rate = interview 
-        ? offer / interview * 100 
-        : 0
-    
+    const offer_rate =
+        funnelCounts.interview
+            ? (funnelCounts.offer / funnelCounts.interview) * 100
+            : 0
 
     return {
-        total_applications, 
-
-        interview,
-        offer,
+        applied: funnelCounts.applied,
+        interview: funnelCounts.interview,
+        offer: funnelCounts.offer,
 
         interview_rate,
         offer_rate,

@@ -90,24 +90,24 @@ export default function DashboardPage() {
 
   // Chuyển object funnel từ backend thành array cho Funnel component
   const funnel = data?.funnel
-    ? [
-        {
-          label: statusLabels.applied,
-          count: data.funnel.total_applications,
-          percent: 100,
-        },
-        {
-          label: statusLabels.interview,
-          count: data.funnel.interview,
-          percent: data.funnel.interview_rate,
-        },
-        {
-          label: statusLabels.offer,
-          count: data.funnel.offer,
-          percent: data.funnel.offer_rate,
-        },
-      ]
-    : []
+  ? [
+      {
+        label: statusLabels.applied,
+        count: data.funnel.applied,
+        percent: 100,
+      },
+      {
+        label: statusLabels.interview,
+        count: data.funnel.interview,
+        percent: data.funnel.interview_rate,
+      },
+      {
+        label: statusLabels.offer,
+        count: data.funnel.offer,
+        percent: data.funnel.offer_rate,
+      },
+    ]
+  : []
 
   function handleApplicationClick(application) {
     navigate('/application', { state: { highlightApplicationId: application.application_id } })

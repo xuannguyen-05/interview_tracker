@@ -11,14 +11,13 @@ import DashboardPage from "@/pages/dashboard/DashboardPage"
 import ApplicationPage from "@/pages/application/ApplicationPage"
 import MainLayout from "@/components/layout/MainLayout"
 
-import ReactGA from "./lib/analytics";
-import { useEffect } from "react";
+import ReactGA from "./lib/analytics"
+import { useEffect } from "react"
 
 function ProtectedRoute({ children }) {
-  const { accessToken } = useAuthStore()
+  const { user } = useAuthStore()
 
-  // Nếu chưa đăng nhập thì đá về trang login
-  if (!accessToken) {
+  if (!user) {
     return <Navigate to="/login" replace />
   }
 
@@ -26,35 +25,36 @@ function ProtectedRoute({ children }) {
 }
 
 function PublicOnlyRoute({ children }) {
-  const { accessToken } = useAuthStore()
+  const { user } = useAuthStore()
 
-  // Nếu đã đăng nhập thì không cho quay lại login/register
-  if (accessToken) {
-    return <Navigate to="/" replace />
+  if (user) {
+    return <Navigate to="/application" replace />
   }
 
   return children
 }
 
 export default function App() {
-  const { accessToken } = useAuthStore()
+  const { user } = useAuthStore()
 
-  const location = useLocation();
+  const location = useLocation()
 
-    useEffect(() => {
-
-        ReactGA.send({
-            hitType: "pageview",
-            page: location.pathname + location.search,
-        });
-
-    }, [location]);
+  useEffect(() => {
+    ReactGA.send({
+      hitType: "pageview",
+      page: location.pathname + location.search,
+    })
+  }, [location])
 
   return (
     <Routes>
       <Route
         path="/"
-        element={accessToken ? <Navigate to="/application" replace /> : <LandingPage />}
+        element={
+          user
+            ? <Navigate to="/application" replace />
+            : <LandingPage />
+        }
       />
 
       {/* Public routes */}
@@ -66,6 +66,7 @@ export default function App() {
           </PublicOnlyRoute>
         }
       />
+
       <Route
         path="/register"
         element={
@@ -74,6 +75,7 @@ export default function App() {
           </PublicOnlyRoute>
         }
       />
+
       <Route
         path="/forgot-password"
         element={
@@ -82,6 +84,7 @@ export default function App() {
           </PublicOnlyRoute>
         }
       />
+
       <Route
         path="/reset-password"
         element={
@@ -114,7 +117,6 @@ export default function App() {
         }
       />
 
-      {/* Fallback */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )

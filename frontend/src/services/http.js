@@ -20,7 +20,7 @@ http.interceptors.response.use(
     if (error.response?.status === 401) {
       // Clear auth state
       const authStore = useAuthStore.getState()
-      authStore.clearAccessToken()
+      authStore.clearAuth()
       
       // Redirect to login
       if (window.location.pathname !== "/login") {
