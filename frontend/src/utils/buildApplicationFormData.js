@@ -1,4 +1,4 @@
-const TEXT_FIELDS = ["company_name", "position", "apply_date", "job_url", "notes"]
+const TEXT_FIELDS = ["company_name", "position", "apply_date", "job_url", "notes", "delete_resume",]
 
 export function buildApplicationFormData(payload) {
   const formData = new FormData()

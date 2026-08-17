@@ -132,6 +132,15 @@ const updateApplicationService = async(application_id, user_id, data, file) => {
         }
     }
 
+    if(data.delete_resume === "true") {
+        if(application.resume_public_id){
+            await cloudinary.uploader.destroy(application.resume_public_id)
+        }
+
+        updateData.resume_url = null;
+        updateData.resume_public_id = null;
+    }
+
     if(file){
         if(application.resume_public_id){
             await cloudinary.uploader.destroy(application.resume_public_id)

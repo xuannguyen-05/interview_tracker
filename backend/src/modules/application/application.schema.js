@@ -31,6 +31,9 @@ export const createApplicationSchema = z.object({
 
 export const updateApplicationSchema = createApplicationSchema
     .partial()
+    .extend({
+        delete_resume: z.enum(["true", "false"]).optional(),
+    })
     .strict();
 
 export const updateStatusSchema = z.object({
