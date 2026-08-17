@@ -10,6 +10,7 @@ import StatCard from "@/components/dashboard/StatCard"
 import Funnel from "@/components/dashboard/Funnel"
 import MonthlyChart from "@/components/dashboard/MonthlyChart"
 import AddApplicationModal from "@/components/application/AddApplicationModal"
+import { CompanyLogo } from "@/components/application/ApplicationCard"
 
 import {
   getDashboard,
@@ -194,6 +195,8 @@ export default function DashboardPage() {
             <ul className="space-y-3">
               {data?.urgentApplications?.map((a) => {
                 const daysAgo = Math.floor((Date.now() - new Date(a.last_status_changed_at)) / (1000 * 60 * 60 * 24))
+                const initial = a.company_name?.[0]?.toUpperCase() || "?"
+                const colorClass = "bg-amber-100 text-amber-700"
                 return (
                   <li
                     key={a.application_id}
@@ -201,9 +204,12 @@ export default function DashboardPage() {
                     className="group flex items-center justify-between rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-white px-4 py-3 hover:shadow-md transition-all cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 font-semibold text-sm">
-                        {a.company_name.charAt(0)}
-                      </div>
+                      <CompanyLogo 
+                        companyName={a.company_name}
+                        jobUrl={a.job_url}
+                        initial={initial}
+                        colorClass={colorClass}
+                      />
                       <div>
                         <div className="font-medium text-sm text-slate-900">{a.company_name}</div>
                         <div className="text-xs text-slate-500">{a.position}</div>
@@ -248,26 +254,33 @@ export default function DashboardPage() {
               </div>
 
               <ul className="space-y-3">
-                {data?.recentApplications?.map((a) => (
-                  <li
-                    key={a.application_id}
-                    onClick={() => handleApplicationClick(a)}
-                    className="group flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 hover:bg-slate-100 hover:shadow-sm transition-all cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold text-sm">
-                        {a.company_name.charAt(0)}
+                {data?.recentApplications?.map((a) => {
+                  const initial = a.company_name?.[0]?.toUpperCase() || "?"
+                  const colorClass = "bg-indigo-100 text-indigo-700"
+                  return (
+                    <li
+                      key={a.application_id}
+                      onClick={() => handleApplicationClick(a)}
+                      className="group flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 hover:bg-slate-100 hover:shadow-sm transition-all cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3">
+                        <CompanyLogo 
+                          companyName={a.company_name}
+                          jobUrl={a.job_url}
+                          initial={initial}
+                          colorClass={colorClass}
+                        />
+                        <div>
+                          <div className="font-medium text-sm text-slate-900">{a.company_name}</div>
+                          <div className="text-xs text-slate-500">{a.position}</div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="font-medium text-sm text-slate-900">{a.company_name}</div>
-                        <div className="text-xs text-slate-500">{a.position}</div>
+                      <div className="text-xs text-slate-400">
+                        {new Date(a.apply_date).toLocaleDateString()}
                       </div>
-                    </div>
-                    <div className="text-xs text-slate-400">
-                      {new Date(a.apply_date).toLocaleDateString()}
-                    </div>
-                  </li>
-                ))}
+                    </li>
+                  )
+                })}
                 {(!data?.recentApplications || data.recentApplications.length === 0) && (
                   <li className="flex flex-col items-center justify-center py-8 text-center">
                     <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center mb-3">

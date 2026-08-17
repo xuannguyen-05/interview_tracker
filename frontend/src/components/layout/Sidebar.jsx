@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars, no-undef, no-empty */
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { LayoutDashboard, BriefcaseBusiness, Plus, Bell, LogOut } from "lucide-react";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 import { getUnreadCount } from "@/services/notificationService";
@@ -11,33 +12,6 @@ import { useTranslation } from "react-i18next";
 import { socket } from "@/socket/socket";
 
 import http from "@/services/http";
-
-function Icon({ name, className = "h-4 w-4" }) {
-  const paths = {
-    board: "M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z",
-    dashboard: "M4 5h6v6H4V5Zm10 0h6v4h-6V5ZM4 15h6v4H4v-4Zm10-2h6v6h-6v-6Z",
-    plus: "M12 5v14M5 12h14",
-    bell: "M18 8a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7M10 19a2 2 0 0 0 4 0",
-    logout: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9",
-  };
-
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d={paths[name]}
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -115,12 +89,12 @@ export default function Sidebar() {
       <div className="flex h-full flex-col">
         <nav className="flex flex-1 flex-col gap-3 px-5 pt-3">
           <NavLink to="/dashboard" className={navClassName}>
-            <Icon name="dashboard" className="h-5 w-5 text-slate-500" />
+            <LayoutDashboard className="h-5 w-5 text-slate-500" />
             {t("sidebar.dashboard")}
           </NavLink>
 
           <NavLink to="/application" className={navClassName}>
-            <Icon name="board" className="h-5 w-5" />
+            <BriefcaseBusiness className="h-5 w-5" />
             {t("sidebar.myApplications")}
           </NavLink>
 
@@ -129,7 +103,7 @@ export default function Sidebar() {
             onClick={openQuickAdd}
             className="mt-4 inline-flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
           >
-            <Icon name="plus" className="h-5 w-5" />
+            <Plus className="h-5 w-5" />
             {t("sidebar.quickAddJob")}
           </button>
         </nav>
@@ -142,7 +116,7 @@ export default function Sidebar() {
               className="flex items-center justify-between w-full py-2 text-base transition hover:text-slate-950"
             >
               <div className="flex items-center gap-3">
-                <Icon name="bell" className="h-5 w-5 text-slate-500" />
+                <Bell className="h-5 w-5 text-slate-500" />
                 {t("sidebar.notifications")}
               </div>
 
@@ -163,7 +137,7 @@ export default function Sidebar() {
             onClick={handleSignOut}
             className="mt-3 flex items-center gap-3 py-2 text-base transition hover:text-slate-950"
           >
-            <Icon name="logout" className="h-5 w-5 text-slate-500" />
+            <LogOut className="h-5 w-5 text-slate-500" />
             {t("sidebar.signOut")}
           </button>
 

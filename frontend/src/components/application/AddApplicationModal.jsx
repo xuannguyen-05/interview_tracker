@@ -1,57 +1,10 @@
 /* eslint-disable no-unused-vars, react-hooks/set-state-in-effect */
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { FilePlus2, PencilLine, X, CalendarDays, ExternalLink, StickyNote, FileText, Upload, File, Eye, Check, Trash2 } from "lucide-react";
 
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { validateResumeFile } from "@/utils/buildApplicationFormData";
-
-/* -------------------------------------------------------------------------- */
-/* Icons                                                                      */
-/* -------------------------------------------------------------------------- */
-
-function ModalIcon({ name, className = "h-4 w-4" }) {
-  const paths = {
-    board: "M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z",
-
-    close: "M18 6 6 18M6 6l12 12",
-
-    calendar:
-      "M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z",
-
-    external:
-      "M14 3h7v7M10 14 21 3M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5",
-
-    note: "M14 2H6a2 2 0 0 0-2 2v16l4-3h10a2 2 0 0 0 2-2V8l-6-6Z M14 2v6h6",
-
-    check: "M20 6 9 17l-5-5",
-
-    resume:
-      "M14 2H6a2 2 0 0 0-2 2v16l4-3h10a2 2 0 0 0 2-2V8l-6-6Z M14 2v6h6 M10 12h4",
-
-    upload: "M12 3v12M8 11l4 4 4-4M5 21h14",
-
-    file: "M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Zm0 0v6h6",
-
-    eye: "M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Zm10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z",
-  };
-
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d={paths[name]}
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 /* -------------------------------------------------------------------------- */
 /* Resume Section                                                             */
@@ -76,7 +29,7 @@ function ResumeSection({
     <div>
       {/* Label */}
       <label className="flex items-center gap-1.5 text-sm font-medium text-slate-700">
-        <ModalIcon name="resume" className="h-3.5 w-3.5" />
+        <FileText className="h-3.5 w-3.5" />
 
         {t("application.modal.resume")}
 
@@ -103,7 +56,7 @@ function ResumeSection({
           <div className="flex items-start justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
-                <ModalIcon name="file" className="h-5 w-5" />
+                <File className="h-5 w-5" />
               </div>
 
               <div className="min-w-0">
@@ -142,7 +95,7 @@ function ResumeSection({
               disabled={isSubmitting}
               className="inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-white px-4 py-2 text-sm font-medium text-indigo-600 transition hover:bg-indigo-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <ModalIcon name="upload" className="h-4 w-4" />
+              <Upload className="h-4 w-4" />
               {t("application.modal.changeFile")}
             </button>
           </div>
@@ -156,7 +109,7 @@ function ResumeSection({
           <div className="flex items-start justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
-                <ModalIcon name="file" className="h-5 w-5" />
+                <File className="h-5 w-5" />
               </div>
 
               <div className="min-w-0">
@@ -176,7 +129,7 @@ function ResumeSection({
               rel="noreferrer"
               className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
             >
-              <ModalIcon name="eye" className="h-4 w-4" />
+              <Eye className="h-4 w-4" />
               {t("application.modal.viewCv")}
             </a>
           </div>
@@ -189,7 +142,7 @@ function ResumeSection({
               disabled={isSubmitting}
               className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <ModalIcon name="upload" className="h-4 w-4" />
+              <Upload className="h-4 w-4" />
               {t("application.modal.replaceCv")}
             </button>
 
@@ -198,8 +151,9 @@ function ResumeSection({
               type="button"
               onClick={onDeleteResume}
               disabled={isSubmitting}
-              className="rounded-xl border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
+              <Trash2 className="h-4 w-4" />
               {t("application.modal.deleteCv")}
             </button>
           </div>
@@ -217,7 +171,7 @@ function ResumeSection({
               disabled={isSubmitting}
               className="inline-flex items-center gap-2 rounded-xl border border-black/[0.08] bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <ModalIcon name="upload" className="h-4 w-4" />
+              <Upload className="h-4 w-4" />
 
               {t("application.modal.choosePdf")}
             </button>
@@ -462,7 +416,7 @@ export default function AddApplicationModal({
         <div className="flex items-center justify-between border-b border-slate-100 px-7 py-5">
           <div className="flex items-center gap-3">
             <div className="grid h-8 w-8 place-items-center rounded-xl bg-indigo-50 text-indigo-600">
-              <ModalIcon name="board" />
+              {initial ? <PencilLine /> : <FilePlus2 />}
             </div>
 
             <h3 className="text-base font-bold text-slate-950">
@@ -478,7 +432,7 @@ export default function AddApplicationModal({
             className="grid h-8 w-8 place-items-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
             aria-label={t("application.modal.close")}
           >
-            <ModalIcon name="close" className="h-4 w-4" />
+            <X className="h-4 w-4" />
           </button>
         </div>
 
@@ -486,7 +440,7 @@ export default function AddApplicationModal({
         {/* Form                                                              */}
         {/* ---------------------------------------------------------------- */}
 
-        <form className="min-h-0 space-y-4 overflow-y-auto p-7" onSubmit={handleSubmit}>
+        <form className="min-h-0 space-y-4 overflow-y-auto px-7 pt-4 pb-7" onSubmit={handleSubmit}>
           {/* Error */}
           {error ? (
             <p className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
@@ -546,8 +500,7 @@ export default function AddApplicationModal({
               </label>
 
               <div className="relative mt-2">
-                <ModalIcon
-                  name="calendar"
+                <CalendarDays
                   className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
                 />
 
@@ -588,7 +541,7 @@ export default function AddApplicationModal({
 
           <div>
             <label className="flex items-center gap-1.5 text-sm font-medium text-slate-700">
-              <ModalIcon name="external" className="h-3.5 w-3.5" />
+              <ExternalLink className="h-3.5 w-3.5" />
 
               {t("application.modal.jobUrl")}
             </label>
@@ -608,7 +561,7 @@ export default function AddApplicationModal({
 
           <div>
             <label className="flex items-center gap-1.5 text-sm font-medium text-slate-700">
-              <ModalIcon name="note" className="h-3.5 w-3.5" />
+              <StickyNote className="h-3.5 w-3.5" />
 
               {t("application.modal.notes")}
             </label>
@@ -657,7 +610,7 @@ export default function AddApplicationModal({
               disabled={isSubmitting}
               className="inline-flex items-center gap-2 rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              <ModalIcon name="check" className="h-4 w-4" />
+              <Check className="h-4 w-4" />
 
               {isSubmitting
                 ? t("application.modal.uploading")

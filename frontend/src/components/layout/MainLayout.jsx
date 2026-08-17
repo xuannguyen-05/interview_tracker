@@ -56,7 +56,7 @@ export default function MainLayout({ children }) {
               <Brand />
 
               {pageTitle ? (
-                <div className="ml-10 min-w-0 truncate md:ml-12">
+                <div className="ml-12 min-w-0 truncate md:ml-16">
                   <TypingTitle text={pageTitle} />
                 </div>
               ) : null}
