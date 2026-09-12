@@ -18,7 +18,7 @@ export default function LanguageSwitcher() {
             key={code}
             type="button"
             onClick={() => i18n.changeLanguage(code)}
-            className={`rounded-md px-2 py-1 text-[11px] font-semibold transition-all duration-200 ${
+            className={`rounded-md px-1.5 py-0.5 text-[10px] font-semibold transition-all duration-200 ${
               active
                 ? "bg-blue-600 text-white shadow-sm"
                 : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
