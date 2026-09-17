@@ -2,6 +2,14 @@ services:
   backend:
     image: xnguyen05/interview-tracker-backend:latest
     container_name: interview-backend
+    restart: unless-stopped
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
     ports:
       - "7070:7070"
     env_file:
@@ -27,8 +35,7 @@ services:
   db:
     image: postgres:17
     container_name: interview-postgres
-    ports:
-      - "5432:5432"
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
