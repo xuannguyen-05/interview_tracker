@@ -1,0 +1,32 @@
+name: Interview Tracker Backend CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+    
+
+    steps:
+     - name: Checkout code
+       uses: actions/checkout@v4
+
+     - name: Setup Node.js
+       uses: actions/checkout@v4
+       with: 
+        node-version: 22
+
+     - name: Install dependencies
+       run: npm ci
+
+     - name: Check Javascript syntax
+       run: node --check src/server.js  
+
+       
