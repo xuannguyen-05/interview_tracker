@@ -28,9 +28,3 @@ jobs:
 
      - name: Check Javascript syntax
        run: node --check src/server.js  
-
-     - name: Test intentional syntax error
-       run: node --check ci-fail-demo.js
-
-     - name: Step after failure
-       run: echo "This should be skipped"
