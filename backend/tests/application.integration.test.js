@@ -2,6 +2,9 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
 import jwt from "jsonwebtoken";
 
+const TEST_JWT_SECRET = "test-secret-for-integration-tests";
+process.env.JWT_SECRET = TEST_JWT_SECRET;
+
 const { mockFindUnique, mockGetApplicationsService } = vi.hoisted(() => ({
   mockFindUnique: vi.fn(),
   mockGetApplicationsService: vi.fn()
@@ -42,7 +45,7 @@ describe("GET /api/application - Integration tests", () => {
   it("trả 401 khi token hợp lệ nhưng user không tồn tại", async () => {
     const token = jwt.sign(
       { user_id: 999 },
-      process.env.JWT_SECRET
+      process.env.TEST_JWT_SECRET
     );
 
     mockFindUnique.mockResolvedValue(null);
@@ -66,7 +69,7 @@ describe("GET /api/application - Integration tests", () => {
   it("trả về danh sách application khi xác thực thành công", async () => {
     const token = jwt.sign(
       { user_id: 10 },
-      process.env.JWT_SECRET
+      process.env.TEST_JWT_SECRET
     );
 
     const applications = [
