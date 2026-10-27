@@ -5,7 +5,7 @@ import {getNotifications,
         updateNotificationRead,
         updateNotificationReadAll
 } from './notification.controller.js'
-import validate from '../../middlewares/validate.middleware.js'
+
 
 
 const router = express.Router();

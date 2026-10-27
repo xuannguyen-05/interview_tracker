@@ -1,4 +1,5 @@
 import prisma from '../../config/prisma.js'
+import AppError from '../../utils/AppError.js'
 
 const createNotification = async({application_id, user_id, type}) => {
     return prisma.notification.create({
