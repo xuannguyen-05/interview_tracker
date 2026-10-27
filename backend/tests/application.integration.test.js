@@ -45,7 +45,7 @@ describe("GET /api/application - Integration tests", () => {
   it("trả 401 khi token hợp lệ nhưng user không tồn tại", async () => {
     const token = jwt.sign(
       { user_id: 999 },
-      process.env.TEST_JWT_SECRET
+      TEST_JWT_SECRET
     );
 
     mockFindUnique.mockResolvedValue(null);
@@ -69,7 +69,7 @@ describe("GET /api/application - Integration tests", () => {
   it("trả về danh sách application khi xác thực thành công", async () => {
     const token = jwt.sign(
       { user_id: 10 },
-      process.env.TEST_JWT_SECRET
+     TEST_JWT_SECRET
     );
 
     const applications = [
