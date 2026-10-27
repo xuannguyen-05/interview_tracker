@@ -1,50 +1,30 @@
 import "dotenv/config";
-import express from "express";
-import cors from "cors";
-import cookieParser from "cookie-parser";
-import prisma from "./config/prisma.js";
-import routes from "./routes/index.js";
-import errorHandler from "./middlewares/errorHandler.middleware.js";
 import http from "http";
-import {initSocket} from "./config/socket.js"
-
-const app = express();
-const server = http.createServer(app)
+import app from "./app.js";
+import prisma from "./config/prisma.js";
+import { initSocket } from "./config/socket.js";
 
 const port = process.env.PORT || 7777;
 const hostname = process.env.HOST_NAME;
 
-// init socket
-initSocket(server)
+const server = http.createServer(app);
 
-app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'https://interview-tracker-khaki.vercel.app',
-    process.env.FRONTEND_ORIGIN
-  ],
-  credentials: true
-}));
+initSocket(server);
 
-//config req.body
-app.use(express.json()); // đọc JSON
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+async function startServer() {
+  try {
+    await prisma.$connect();
+    console.log("DB connected");
 
-app.use('/api', routes);
+    server.listen(port, hostname, () => {
+      console.log(`Server running at http://${hostname}:${port}`);
+    });
+  } catch (error) {
+    console.error("Error connect to DB", error);
+    process.exitCode = 1;
+  }
+}
 
-app.use(errorHandler);
+startServer();
 
-
-(async() => {
-    try {
-        await prisma.$connect();
-        console.log("DB connected")
-
-        server.listen(port, hostname, () => {
-            console.log(`Server running at http://${hostname}:${port}`);
-        })
-    } catch (error) {
-        console.log("Error connect to DB", error)
-    }
-})()
+export { app, server };
