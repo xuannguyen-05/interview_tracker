@@ -10,8 +10,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://interview-tracker-khaki.vercel.app",
-    process.env.FRONTEND_ORIGIN
+    process.env.CLIENT_URL
   ],
   credentials: true
 }));
