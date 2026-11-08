@@ -9,15 +9,15 @@ const broadcastOnlineCount = () => {
   const totalSockets = io.engine?.clientsCount || 0;
   io.emit("admin:online_count", {
     count,
-    totalSockets
+    totalSockets,
   });
 };
 
 const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: "*"
-    }
+      origin: "*",
+    },
   });
 
   io.on("connection", (socket) => {
@@ -26,7 +26,7 @@ const initSocket = (server) => {
     // Broadcast current count to newly connected socket
     socket.emit("admin:online_count", {
       count: onlineUsers.size,
-      totalSockets: io.engine?.clientsCount || 0
+      totalSockets: io.engine?.clientsCount || 0,
     });
 
     socket.on("register", (user_id) => {
@@ -37,16 +37,13 @@ const initSocket = (server) => {
     });
 
     socket.on("disconnect", () => {
-      let changed = false;
       for (const [user_id, socketId] of onlineUsers.entries()) {
         if (socketId === socket.id) {
           onlineUsers.delete(user_id);
-          changed = true;
         }
       }
-      if (changed || true) {
-        broadcastOnlineCount();
-      }
+
+      broadcastOnlineCount();
     });
   });
 
@@ -60,7 +57,7 @@ const getOnlineUsers = () => onlineUsers;
 const getOnlineUsersCount = () => {
   return {
     registeredOnline: onlineUsers.size,
-    totalConnected: io?.engine?.clientsCount || 0
+    totalConnected: io?.engine?.clientsCount || 0,
   };
 };
 
