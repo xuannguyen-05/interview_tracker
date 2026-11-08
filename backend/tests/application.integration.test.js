@@ -62,7 +62,12 @@ describe("GET /api/application - Integration tests", () => {
 
     expect(mockFindUnique).toHaveBeenCalledWith({
       where: { user_id: 999 },
-      select: { user_id: true }
+      select: {
+        user_id: true,
+        full_name: true,
+        email: true,
+        role: true
+      }
     });
   });
 
