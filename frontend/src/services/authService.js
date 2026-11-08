@@ -55,3 +55,12 @@ export async function resetPasswordApi(payload) {
     throw error
   }
 }
+
+export async function getMeApi() {
+  try {
+    const response = await http.get("/auth/me")
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}

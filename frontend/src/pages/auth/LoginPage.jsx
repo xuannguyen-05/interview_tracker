@@ -100,7 +100,7 @@ export default function LoginPage() {
 
     setUser(user);
 
-    navigate("/application", { replace: true });
+    navigate(user?.role === "ADMIN" ? "/admin" : "/application", { replace: true });
   }
 
   async function handleGoogleCredentialResponse(response) {
@@ -170,7 +170,7 @@ export default function LoginPage() {
         method: "email",
       });
 
-      navigate("/application", { replace: true });
+      navigate(user?.role === "ADMIN" ? "/admin" : "/application", { replace: true });
     } catch (requestError) {
       setError(
         getErrorMessage(

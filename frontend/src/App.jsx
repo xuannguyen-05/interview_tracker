@@ -9,7 +9,11 @@ import LandingPage from "@/pages/landing/LandingPage"
 import NotFoundPage from "@/pages/errors/NotFoundPage"
 import DashboardPage from "@/pages/dashboard/DashboardPage"
 import ApplicationPage from "@/pages/application/ApplicationPage"
+import AdminDashboardPage from "@/pages/admin/AdminDashboardPage"
+import AdminRoute from "@/components/auth/AdminRoute"
 import MainLayout from "@/components/layout/MainLayout"
+import AdminLayout from "@/components/layout/AdminLayout"
+import { getMeApi } from "@/services/authService"
 
 import ReactGA from "./lib/analytics"
 import { useEffect } from "react"
@@ -21,6 +25,10 @@ function ProtectedRoute({ children }) {
     return <Navigate to="/login" replace />
   }
 
+  if (user.role === "ADMIN") {
+    return <Navigate to="/admin" replace />
+  }
+
   return children
 }
 
@@ -28,16 +36,31 @@ function PublicOnlyRoute({ children }) {
   const { user } = useAuthStore()
 
   if (user) {
-    return <Navigate to="/application" replace />
+    return <Navigate to={user.role === "ADMIN" ? "/admin" : "/application"} replace />
   }
 
   return children
 }
 
 export default function App() {
-  const { user } = useAuthStore()
+  const { user, setUser } = useAuthStore()
 
   const location = useLocation()
+
+  // Đồng bộ thông tin người dùng mới nhất (ví dụ cập nhật role từ DB)
+  useEffect(() => {
+    if (user?.user_id) {
+      getMeApi()
+        .then((res) => {
+          if (res?.data?.user) {
+            setUser(res.data.user)
+          }
+        })
+        .catch(() => {
+          // Token không hợp lệ hoặc đã hết hạn
+        })
+    }
+  }, [])
 
   useEffect(() => {
     ReactGA.send({
@@ -52,7 +75,7 @@ export default function App() {
         path="/"
         element={
           user
-            ? <Navigate to="/application" replace />
+            ? <Navigate to={user.role === "ADMIN" ? "/admin" : "/application"} replace />
             : <LandingPage />
         }
       />
@@ -114,6 +137,18 @@ export default function App() {
               <ApplicationPage />
             </MainLayout>
           </ProtectedRoute>
+        }
+      />
+
+      {/* Admin route với Layout riêng biệt */}
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminLayout>
+              <AdminDashboardPage />
+            </AdminLayout>
+          </AdminRoute>
         }
       />
 

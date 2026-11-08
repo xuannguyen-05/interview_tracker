@@ -1,27 +1,27 @@
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcrypt';
 import crypto from "crypto";
-import jwt from 'jsonwebtoken'
-import prisma from '../../config/prisma.js'
-import AppError from '../../utils/AppError.js'
+import jwt from 'jsonwebtoken';
+import prisma from '../../config/prisma.js';
+import AppError from '../../utils/AppError.js';
 import { sendMail } from '../../services/mail.service.js';
 import { resetPasswordTemplate } from '../../templates/resetPassword.template.js';
-import {OAuth2Client} from "google-auth-library"
+import { OAuth2Client } from "google-auth-library";
 
-const registerService = async(data) => {
-    const {full_name, email, password} = data
+const registerService = async (data) => {
+    const { full_name, email, password } = data;
 
-    const existingUser =  await prisma.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
         where: {
             email
         }
-    })
+    });
 
-    if(existingUser){
-        throw new AppError("Email already exists", 409, "EMAIL_EXISTS") 
+    if (existingUser) {
+        throw new AppError("Email already exists", 409, "EMAIL_EXISTS");
     }
 
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = await prisma.user.create({
         data: {
@@ -31,59 +31,63 @@ const registerService = async(data) => {
         },
         select: {
             user_id: true,
-            full_name: true
+            full_name: true,
+            email: true,
+            role: true
         }
-    })
+    });
 
-    return user
-}
+    return user;
+};
 
-const loginService = async(data) => {
-    const {email, password} = data
+const loginService = async (data) => {
+    const { email, password } = data;
 
-    const user =  await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
         where: {
             email
         }
-    })
+    });
 
-    if(!user){
-        throw new AppError("Invalid email or password", 401, "INVALID_CREDENTIALS")
+    if (!user) {
+        throw new AppError("Invalid email or password", 401, "INVALID_CREDENTIALS");
     }
 
-    const isMatch = await bcrypt.compare(password, user.password_hash)
+    const isMatch = await bcrypt.compare(password, user.password_hash);
 
     if (!isMatch) {
-        throw new AppError("Invalid email or password", 401, "INVALID_CREDENTIALS")
+        throw new AppError("Invalid email or password", 401, "INVALID_CREDENTIALS");
     }
 
     const accessToken = jwt.sign(
         {
-            user_id: user.user_id
+            user_id: user.user_id,
+            role: user.role
         },
         process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_EXPIRES_IN }
-    )
+    );
 
     return {
         user: {
             user_id: user.user_id,
             full_name: user.full_name,
-            email: user.email
+            email: user.email,
+            role: user.role
         },
         accessToken
-    }
-}
+    };
+};
 
-const forgotPasswordService = async(email) => {
+const forgotPasswordService = async (email) => {
     const user = await prisma.user.findUnique({
         where: {
             email
         }
-    })
+    });
 
-    if(!user){
-        return
+    if (!user) {
+        return;
     }
 
     const resetToken = crypto.randomBytes(32).toString("hex");
@@ -105,17 +109,16 @@ const forgotPasswordService = async(email) => {
         }
     });
 
-    const resetLink =
-    `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
+    const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
 
     await sendMail({
         to: user.email,
         subject: "Reset your password",
         html: resetPasswordTemplate(resetLink)
     });
-}
+};
 
-const resetPasswordService = async(token, password) => {
+const resetPasswordService = async (token, password) => {
     const hashedToken = crypto
         .createHash("sha256")
         .update(token)
@@ -139,8 +142,8 @@ const resetPasswordService = async(token, password) => {
         );
     }
 
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     await prisma.user.update({
         where: {
@@ -152,19 +155,17 @@ const resetPasswordService = async(token, password) => {
             reset_password_expires: null,
         },
     });
-}
-
+};
 
 const googleClient = new OAuth2Client(
     process.env.GOOGLE_CLIENT_ID
 );
 
 const googleLoginService = async (credential) => {
-    // verify Google credential
     const ticket = await googleClient.verifyIdToken({
         idToken: credential,
         audience: process.env.GOOGLE_CLIENT_ID
-    })
+    });
 
     const payload = ticket.getPayload();
 
@@ -173,39 +174,36 @@ const googleLoginService = async (credential) => {
             "Google email is not verified",
             401,
             "GOOGLE_EMAIL_NOT_VERIFIED"
-        )
+        );
     }
 
     const google_id = payload.sub;
     const email = payload.email;
     const full_name = payload.name;
 
-    // tìm user
     const userSelect = {
         user_id: true,
         full_name: true,
-        email: true
-    }
+        email: true,
+        role: true
+    };
 
     let user = await prisma.user.findUnique({
         where: {
             google_id
         },
         select: userSelect
-    })
+    });
 
-    if(!user){
-
+    if (!user) {
         user = await prisma.user.findUnique({
             where: {
                 email
             },
             select: userSelect
         });
-        
-        // Có account email/password rồi
-        // → link Google vào account đó
-        if(user){
+
+        if (user) {
             user = await prisma.user.update({
                 where: {
                     user_id: user.user_id
@@ -214,10 +212,8 @@ const googleLoginService = async (credential) => {
                     google_id
                 },
                 select: userSelect
-            })
-        }else{
-            // Không có account nào
-            // → tạo user mới
+            });
+        } else {
             user = await prisma.user.create({
                 data: {
                     full_name,
@@ -226,32 +222,53 @@ const googleLoginService = async (credential) => {
                     password_hash: null
                 },
                 select: userSelect
-            })
+            });
         }
     }
-    // tạo JWT
+
     const accessToken = jwt.sign(
         {
-            user_id: user.user_id
+            user_id: user.user_id,
+            role: user.role
         },
         process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_EXPIRES_IN }
-    )
+    );
 
     return {
         user: {
             user_id: user.user_id,
             full_name: user.full_name,
-            email: user.email
+            email: user.email,
+            role: user.role
         },
         accessToken
+    };
+};
+
+const getMeService = async (userId) => {
+    const user = await prisma.user.findUnique({
+        where: { user_id: userId },
+        select: {
+            user_id: true,
+            full_name: true,
+            email: true,
+            role: true
+        }
+    });
+
+    if (!user) {
+        throw new AppError("User not found", 404, "USER_NOT_FOUND");
     }
-}
+
+    return user;
+};
 
 export {
     registerService,
     loginService,
     forgotPasswordService,
     resetPasswordService,
-    googleLoginService
-}
+    googleLoginService,
+    getMeService
+};

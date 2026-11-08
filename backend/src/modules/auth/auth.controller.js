@@ -1,77 +1,80 @@
-import {registerService, loginService, forgotPasswordService, resetPasswordService, googleLoginService} from './auth.service.js'
-import asyncHandler from '../../utils/asyncHandler.js'
+import {
+    registerService,
+    loginService,
+    forgotPasswordService,
+    resetPasswordService,
+    googleLoginService,
+    getMeService
+} from './auth.service.js';
+import asyncHandler from '../../utils/asyncHandler.js';
 
-
-const register = asyncHandler(async(req, res) => {
-
-    const user = await registerService(req.body)
+const register = asyncHandler(async (req, res) => {
+    const user = await registerService(req.body);
 
     res.status(201).json({
-        message: "Register success", 
+        message: "Register success",
         data: user
-    }) 
-})
+    });
+});
 
-const login = asyncHandler(async(req, res) => {
-
-    const {user, accessToken } = await loginService(req.body)
+const login = asyncHandler(async (req, res) => {
+    const { user, accessToken } = await loginService(req.body);
 
     const isProduction = process.env.NODE_ENV === "production";
 
     res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: isProduction,
         sameSite: isProduction ? "none" : "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 ngày
-    })
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
 
     res.status(200).json({
         message: "Login success",
         data: {
             user
         }
-    })
-})
+    });
+});
 
 const logout = (req, res) => {
+    const isProduction = process.env.NODE_ENV === "production";
 
     res.clearCookie("accessToken", {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
-    })
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax"
+    });
 
     res.status(200).json({
         message: "Logout success"
-    })
-
-}
+    });
+};
 
 const forgotPassword = asyncHandler(async (req, res) => {
     await forgotPasswordService(req.body.email);
 
     res.status(200).json({
         success: true,
-        message:
-        "If an account with that email exists, a password reset link has been sent.",
+        message: "If an account with that email exists, a password reset link has been sent."
     });
 });
 
 const resetPassword = asyncHandler(async (req, res) => {
-  const { token, password } = req.body;
+    const { token, password } = req.body;
 
-  await resetPasswordService(token, password);
+    await resetPasswordService(token, password);
 
-  res.status(200).json({
-    success: true,
-    message: "Password reset successfully.",
-  });
+    res.status(200).json({
+        success: true,
+        message: "Password reset successfully."
+    });
 });
 
 const googleLogin = asyncHandler(async (req, res) => {
-    const { credential } = req.body
+    const { credential } = req.body;
 
-    const { user, accessToken } = await googleLoginService(credential)
+    const { user, accessToken } = await googleLoginService(credential);
 
     const isProduction = process.env.NODE_ENV === "production";
 
@@ -80,16 +83,33 @@ const googleLogin = asyncHandler(async (req, res) => {
         secure: isProduction,
         sameSite: isProduction ? "none" : "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000
-    })
+    });
 
     res.status(200).json({
         message: "Google login success",
         data: {
             user
         }
-    })
-})
+    });
+});
 
-export {register, login, logout, forgotPassword, resetPassword, googleLogin}
+const getMe = asyncHandler(async (req, res) => {
+    const user = await getMeService(req.user.user_id);
 
+    res.status(200).json({
+        message: "Get user profile success",
+        data: {
+            user
+        }
+    });
+});
 
+export {
+    register,
+    login,
+    logout,
+    forgotPassword,
+    resetPassword,
+    googleLogin,
+    getMe
+};

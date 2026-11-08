@@ -45,7 +45,9 @@ export default function MainLayout({ children }) {
       ? t("application.title")
       : location.pathname.startsWith("/dashboard")
         ? t("dashboard.title")
-        : ""
+        : location.pathname.startsWith("/admin")
+          ? "Admin Portal"
+          : ""
 
   return (
     <div className="min-h-screen bg-[#f5f6f8] text-slate-900">
